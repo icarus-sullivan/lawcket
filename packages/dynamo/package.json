@@ -1,0 +1,33 @@
+{
+  "name": "@lws/dynamo",
+  "version": "1.0.0",
+  "description": "Stores, syncs and releases websocket clients to dynamo",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/icarus-sullivan/lws.git"
+  },
+  "bugs": {
+    "url": "https://github.com/icarus-sullivan/lws/issues"
+  },
+  "keywords": [
+    "lambda",
+    "websocket",
+    "aws",
+    "post",
+    "send",
+    "publish",
+    "client"
+  ],
+  "author": "Chris Sullivan",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.395.0"
+  },
+  "devDependencies": {
+    "jest": "^24.0.0"
+  }
+}
