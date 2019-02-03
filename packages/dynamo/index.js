@@ -4,13 +4,10 @@ const { curry, pipe } = require('./utils');
 const doc = new AWS.DynamoDB.DocumentClient();
 
 const DEFAULT_OPTIONS = {
-  dry: false,
+  sync: false,
 };
 
-const responseError = (msg) => { throw new Error(msg) };
-
-// dynamo operations
-const buildMethod = curry((tableName, fn, request) => fn({ 
+const doOperation = curry((tableName, fn, request) => fn({ 
   TableName: tableName,
   ...request,
 }).promise());
@@ -21,37 +18,36 @@ const makeSyncParams = ({ connectionId, domainName, stage }) => ({
 
 const makeKeyParams = ({ connectionId }) => ({ Key: connectionId });
 
-const inflateRestoredItem = (response) => response && response.Item
-  ? response.Item
-  : responseError(`Unabled to retrieve connection`);
+const inflateRestoredItem = (response) => {
+  if (response && response.Item) {
+    return response.Item;
+  }
+  throw new Error('Unabled to retrieve stored connection');
+};
 
-// configuration below this line
-const mergeOptions = (opts = DEFAULT_OPTIONS) => ({ ...DEFAULT_OPTIONS, ...opts });
+const createDynamo = (opts = DEFAULT_OPTIONS) => (requestContext) => {
+  const merged = { ...DEFAULT_OPTIONS, ...opts };
+  if (!merged || !merged.tableName) {
+    throw new Error('Must provide a tableName to sync clients with');
+  }
 
-const validate = (merged) => merged.tableName 
-  ? merged
-  : responseError('Must provide a tableName to sync clients with');
-  
-const createDynamo = ({ tableName }) => ({
-  sync: pipe(
-    makeSyncParams,
-    buildMethod(tableName, doc.put),
-  ),
-  restore: pipe(
-    makeKeyParams, 
-    buildMethod(tableName, doc.get),
-    inflateRestoredItem,
-  ),
-  release: pipe(
-    makeKeyParams,
-    buildMethod(tableName, doc.delete),
-  ),
-});
+  if (!merged.sync) {
+    return requestContext;
+  }
 
-const dynamo = pipe(
-  mergeOptions,
-  validate,
-  createDynamo,
-);
+  switch(eventType) {
+    case 'CONNECT': {
+      return pipe(makeSyncParams, doOperation(tableName, doc.put))(requestContext);
+    }
+    case 'DISCONNECT': {
+      return pipe(makeKeyParams, doOperation(tableName, doc.delete))(requestContext);
+    }
+    case 'MESSAGE': {
+      return pipe(makeKeyParams, doOperation(tableName, doc.get, inflateRestoredItem))(requestContext);
+    }
+  }
 
-module.exports = dynamo;
+  return requestContext;
+};
+
+module.exports = createDynamo;
