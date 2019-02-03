@@ -1,43 +1,31 @@
-const aws4 = require('aws4')
-const https = require('https')
-const http = require('http')
-
-const BINARY_HEADERS = {
-  'Content-Type': 'application/octet-stream',
-};
-
-const DEFAULT_HEADERS = {
-  'Content-Type': 'application/json',
-};  
+const aws4 = require('aws4');
+const https = require('https');
+const http = require('http');
+const request = require('./request'); 
 
 const DEFAULT_OPTIONS = {
   port: 443,
   dry: false,
 };
 
-const isBuffer = (data) => data && data instanceof Buffer;
+const assumeHeaders = (data) => 
+  data && data instanceof Buffer 
+    ? { 'Content-Type': 'application/octet-stream' }
+    : { 'Content-Type': 'application/json' };
 
-const request = (method, options) => new Promise((resolve, reject) => {
-  const { body } = options;
-  const req = method.request(options, ({ statusCode }) => {
-    statusCode === 200
-      ? resolve()
-      : reject(`Request failed with status ${statusCode}`);
-  })
-  req.on('error', reject);
-  req.write(body);
-  req.end();
-});
+const assumeBody = (data) => 
+  data && data instanceof Buffer 
+    ? data
+    : JSON.stringify(data);
 
 const createPublisher = ({ requestContext }, opts = DEFAULT_OPTIONS) => (data) => {
   const { domainName, connectionId, stage } = requestContext;
-  const buffer = isBuffer(data);
   const signedRequest = aws4.sign({
     path: `/${stage}/%40connections/${encodeURIComponent(connectionId)}`,
+    headers: assumeHeaders(data),
+    data: assumeBody(data),
     host: domainName,
     method: 'POST',
-    headers: buffer ? BINARY_HEADERS : DEFAULT_HEADERS,
-    data: buffer ? data : JSON.stringify(data),
   });
 
   if (opts.dry) {
@@ -45,7 +33,7 @@ const createPublisher = ({ requestContext }, opts = DEFAULT_OPTIONS) => (data) =
     return;
   }
 
-  const method = opts.port === 433 ? https : http;
+  const method = opts.port === 443 ? https : http;
   return request(method, signedRequest);
 };
 
