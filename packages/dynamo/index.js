@@ -35,7 +35,7 @@ const createDynamo = (opts = DEFAULT_OPTIONS) => (requestContext) => {
     return requestContext;
   }
 
-  switch(eventType) {
+  switch(requestContext.eventType) {
     case 'CONNECT': {
       return pipe(makeSyncParams, doOperation(tableName, doc.put))(requestContext);
     }

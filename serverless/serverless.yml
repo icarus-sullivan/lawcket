@@ -1,6 +1,9 @@
 
 service: lws
 
+plugins:
+  - serverless-websockets-plugin
+
 custom:
   syncTable: Connections-${self:provider.stage}
   billingMode: PAY_PER_REQUEST

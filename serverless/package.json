@@ -15,6 +15,7 @@
   "author": "Chris Sullivan",
   "license": "MIT",
   "devDependencies": {
+    "serverless": "^1.36.3",
     "serverless-websockets-plugin": "^1.0.0"
   },
   "dependencies": {

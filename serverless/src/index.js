@@ -3,10 +3,11 @@ const createPublisher = require('lws/packages/publisher');
 
 const dynamo = createDynamo({
   tableName: process.env.CONNECTIONS_TABLE,
-  dry: true,
+  sync: true,
 });
 
 const websocket = async (event) => {
+  console.log('Event', JSON.stringify(event, null, 2));
   const { requestContext } = event;
 
   const context = await dynamo(requestContext);
@@ -23,5 +24,5 @@ const websocket = async (event) => {
 }
 
 module.exports = { 
-  default: lws.createHandler(),
+  default: websocket,
 };
