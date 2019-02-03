@@ -27,7 +27,7 @@ const createDynamo = (opts = DEFAULT_OPTIONS) => async (requestContext) => {
       return requestContext;
     }
     case 'MESSAGE': {
-      const restored = await doc.delete({ TableName: tableName, Key: connectionId }).promise();
+      const restored = await doc.get({ TableName: tableName, Key: connectionId }).promise();
       return restored && restored.Item 
         ? restored.Item 
         : requestContext;
