@@ -35,6 +35,7 @@ package:
 functions:
   websocket:
     handler: src/index.default
+    memorySize: 3008
     environment:
       CONNECTIONS_TABLE: ${self:custom.syncTable}
     events:
