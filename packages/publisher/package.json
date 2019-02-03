@@ -1,0 +1,23 @@
+{
+  "name": "@lws/publisher",
+  "version": "1.0.0",
+  "description": "Publish messages to a connected client through Lambda websockets",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "lambda",
+    "websocket",
+    "aws",
+    "post",
+    "send",
+    "publish",
+    "client"
+  ],
+  "author": "Chris Sullivan",
+  "license": "MIT",
+  "dependencies": {
+    "aws4": "^1.8.0"
+  }
+}
