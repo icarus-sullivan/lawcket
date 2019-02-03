@@ -1,12 +1,11 @@
 const AWS = require('aws-sdk');
-
 const doc = new AWS.DynamoDB.DocumentClient();
 
 const DEFAULT_OPTIONS = {
   sync: false,
 };
 
-const createDynamo = (opts = DEFAULT_OPTIONS) => (requestContext) => {
+const createDynamo = (opts = DEFAULT_OPTIONS) => async (requestContext) => {
   const merged = { ...DEFAULT_OPTIONS, ...opts };
   if (!merged || !merged.tableName) {
     throw new Error('Must provide a tableName to sync clients with');
@@ -29,7 +28,9 @@ const createDynamo = (opts = DEFAULT_OPTIONS) => (requestContext) => {
     }
     case 'MESSAGE': {
       const restored = await doc.delete({ TableName: tableName, Key: connectionId }).promise();
-      return restored && restored.Item ? restored.Item : requestContext;
+      return restored && restored.Item 
+        ? restored.Item 
+        : requestContext;
     }
   }
 

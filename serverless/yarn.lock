@@ -1489,7 +1489,7 @@ lsmod@1.0.0:
 
 "lws@git+https://github.com/icarus-sullivan/lws.git#master":
   version "0.0.0"
-  resolved "git+https://github.com/icarus-sullivan/lws.git#75d9ff93ae2cec745d956728ed9dca740a7140be"
+  resolved "git+https://github.com/icarus-sullivan/lws.git#beb7e5652994d73d4a02aaacee63bf45233ad4fc"
 
 make-dir@^1.0.0:
   version "1.3.0"

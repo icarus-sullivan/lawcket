@@ -6,6 +6,8 @@ const dynamo = createDynamo({
   sync: true,
 });
 
+console.log('dynamo', dynamo);
+
 const websocket = async (event) => {
   console.log('Event', JSON.stringify(event, null, 2));
   const { requestContext } = event;
