@@ -45,7 +45,7 @@ const createPublisher = ({ requestContext }, opts = DEFAULT_OPTIONS) => (data) =
     return;
   }
 
-  const method = port === 433 ? https : http;
+  const method = opts.port === 433 ? https : http;
   return request(method, signedRequest);
 };
 
