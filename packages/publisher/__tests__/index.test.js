@@ -57,5 +57,5 @@ test('buffer data', async () => {
   const send = createPublisher(fakeEvent, { port: 443 });
   const buf = new Buffer([0x88, 0x02]);
   await send(buf);
-  expect(sign.mock.calls[0][0]).toHaveProperty('data', buf);
+  expect(sign.mock.calls[0][0]).toHaveProperty('body', buf);
 })

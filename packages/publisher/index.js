@@ -23,7 +23,7 @@ const createPublisher = ({ requestContext }, opts = DEFAULT_OPTIONS) => (data) =
   const signedRequest = aws4.sign({
     path: `/${stage}/%40connections/${encodeURIComponent(connectionId)}`,
     headers: assumeHeaders(data),
-    data: assumeBody(data),
+    body: assumeBody(data),
     host: domainName,
     method: 'POST',
   });
