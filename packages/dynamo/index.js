@@ -1,28 +1,9 @@
 const AWS = require('aws-sdk');
-const { curry, pipe } = require('./utils');
 
 const doc = new AWS.DynamoDB.DocumentClient();
 
 const DEFAULT_OPTIONS = {
   sync: false,
-};
-
-const doOperation = curry((tableName, fn, request) => fn({ 
-  TableName: tableName,
-  ...request,
-}).promise());
-
-const makeSyncParams = ({ connectionId, domainName, stage }) => ({ 
-  Item: { connectionId, domainName, stage }
-});
-
-const makeKeyParams = ({ connectionId }) => ({ Key: connectionId });
-
-const inflateRestoredItem = (response) => {
-  if (response && response.Item) {
-    return response.Item;
-  }
-  throw new Error('Unabled to retrieve stored connection');
 };
 
 const createDynamo = (opts = DEFAULT_OPTIONS) => (requestContext) => {
@@ -36,15 +17,19 @@ const createDynamo = (opts = DEFAULT_OPTIONS) => (requestContext) => {
   }
 
   const { tableName } = merged;
-  switch(requestContext.eventType) {
+  const { connectionId, domainName, stage, eventType } = requestContext;
+  switch(eventType) {
     case 'CONNECT': {
-      return pipe(makeSyncParams, doOperation(tableName, doc.put))(requestContext);
+      await doc.put({ TableName: tableName, Item: { connectionId, domainName, stage } }).promise();
+      return requestContext;
     }
     case 'DISCONNECT': {
-      return pipe(makeKeyParams, doOperation(tableName, doc.delete))(requestContext);
+      await doc.delete({ TableName: tableName, Key: connectionId }).promise();
+      return requestContext;
     }
     case 'MESSAGE': {
-      return pipe(makeKeyParams, doOperation(tableName, doc.get, inflateRestoredItem))(requestContext);
+      const restored = await doc.delete({ TableName: tableName, Key: connectionId }).promise();
+      return restored && restored.Item ? restored.Item : requestContext;
     }
   }
 
