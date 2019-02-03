@@ -10,6 +10,11 @@ const DEFAULT_HEADERS = {
   'Content-Type': 'application/json',
 };  
 
+const DEFAULT_OPTIONS = {
+  port: 443,
+  dry: false,
+};
+
 const isBuffer = (data) => data && data instanceof Buffer;
 
 const request = (method, options) => new Promise((resolve, reject) => {
@@ -24,7 +29,7 @@ const request = (method, options) => new Promise((resolve, reject) => {
   req.end();
 });
 
-const createPublisher = ({ requestContext }, { port = 443, dry }) => (data) => {
+const createPublisher = ({ requestContext }, opts = DEFAULT_OPTIONS) => (data) => {
   const { domainName, connectionId, stage } = requestContext;
   const buffer = isBuffer(data);
   const signedRequest = aws4.sign({
@@ -35,8 +40,8 @@ const createPublisher = ({ requestContext }, { port = 443, dry }) => (data) => {
     data: buffer ? data : JSON.stringify(data),
   });
 
-  if (dry) {
-    console.log(`Requesting on port ${port}`, JSON.stringify(signedRequest, null, 2));
+  if (opts.dry) {
+    console.log(`Requesting on port ${opts.port}`, JSON.stringify(signedRequest, null, 2));
     return;
   }
 
