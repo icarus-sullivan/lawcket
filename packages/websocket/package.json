@@ -1,0 +1,30 @@
+{
+  "name": "@lws/websocket",
+  "version": "1.0.0",
+  "description": "A pluggable API Gateway Lambda wrapper that mimics server websockets",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/icarus-sullivan/lws.git"
+  },
+  "bugs": {
+    "url": "https://github.com/icarus-sullivan/lws/issues"
+  },
+  "keywords": [
+    "lambda",
+    "websocket",
+    "aws",
+    "post",
+    "send",
+    "publish",
+    "client"
+  ],
+  "author": "Chris Sullivan",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^24.0.0"
+  }
+}

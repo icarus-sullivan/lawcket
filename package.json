@@ -1,0 +1,25 @@
+{
+  "name": "@lws/config",
+  "version": "1.0.0",
+  "description": "Common configuration across repo",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint . --ext .js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/icarus-sullivan/lws.git"
+  },
+  "author": "Chris Sullivan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/icarus-sullivan/lws/issues"
+  },
+  "homepage": "https://github.com/icarus-sullivan/lws#readme",
+  "devDependencies": {
+    "eslint": "^5.13.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jest": "^22.2.2"
+  }
+}

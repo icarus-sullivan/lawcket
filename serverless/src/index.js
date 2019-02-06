@@ -1,30 +1,31 @@
 const dynamoSync = require('lws/packages/dynamo');
 const createPublisher = require('lws/packages/publisher');
+const LambdaWebSocket = require('lws/packages/websocket');
 
-const sync = dynamoSync({
+const dynamo = dynamoSync({
   tableName: process.env.CONNECTIONS_TABLE,
   sync: true,
 });
 
-console.log('dynamo', dynamo);
+const lambdaSocket = new LambdaWebSocket();
 
-const websocket = async (event) => {
-  console.log('Event', JSON.stringify(event, null, 2));
-  const { requestContext } = event;
+lambdaSocket.on('connect', async (event) => {
+  await dynamo.sync(event, {
+    channel: 'gifs',
+  });
+});
 
-  const context = await sync(requestContext);
-  switch(requestContext.eventType) {
-    case 'MESSAGE': {
-      const send = createPublisher(context, { port: 443, dry: true });
-      await send('hi');
-      break;
-    }
-  }
-  return {
-    statusCode: '200',
-  }
-}
+lambdaSocket.on('message', async (event) => {
+  const connection = await dynamo.restore(event);
+  const send = await createPublisher(connection);
 
-module.exports = { 
-  default: websocket,
+  await send({ message: 'hello from server' });
+});
+
+lambdaSocket.on('disconnect', async (event) => {
+  await dynamo.release(event);
+});
+
+module.exports = {
+  default: lambdaSocket.createHandler(),
 };
