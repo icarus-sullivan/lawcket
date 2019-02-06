@@ -1,11 +1,11 @@
 const { sign } = require('aws4');
-const http = require('http');
-const https = require('https');
-const request = require('../request');
+const { request } = require('http');
+const { request: secureRequest } = require('https');
 const createPublisher = require('../');
 
 jest.mock('aws4');
-jest.mock('../request');
+jest.mock('http');
+jest.mock('https');
 
 const fakeEvent = {
   "requestContext": { 
@@ -26,36 +26,38 @@ const fakeEvent = {
   }
 };
 
+const mockReq = (fn) => fn.mockImplementation((p, cb) => {
+  cb({ statusCode: 200 });
+  return {
+    write: jest.fn(),
+    on: jest.fn(),
+    end: jest.fn(),
+  };
+})
+
 beforeEach(() => {
   jest.resetAllMocks();
   sign.mockImplementation((args) => args);
-  request.mockImplementation((method, args) => args);
 });
 
-test('dry run', async () => {
-  const send = createPublisher(fakeEvent, { dry: true, port: 80 });
-  
+test('http', async () => {
+  mockReq(request);
+  const send = createPublisher(fakeEvent, { secure: false });
   await send('hi');
-
-  expect(request).not.toHaveBeenCalled();
-  expect(sign).toHaveBeenCalled();
+  expect(request.mock.calls[0][0]).toMatchSnapshot();
 });
 
-test('port 80', async () => {
-  const send = createPublisher(fakeEvent, { port: 80 });
+test('https', async () => {
+  mockReq(secureRequest);
+  const send = createPublisher(fakeEvent, { secure: true });
   await send('hi');
-  expect(request.mock.calls[0][0]).toEqual(http);
-});
-
-test('port 443', async () => {
-  const send = createPublisher(fakeEvent, { port: 443 });
-  await send('hi');
-  expect(request.mock.calls[0][0]).toEqual(https);
+  expect(secureRequest.mock.calls[0][0]).toMatchSnapshot();
 });
 
 test('buffer data', async () => {
-  const send = createPublisher(fakeEvent, { port: 443 });
+  mockReq(secureRequest);
+  const send = createPublisher(fakeEvent, { secure: true });
   const buf = new Buffer([0x88, 0x02]);
   await send(buf);
-  expect(sign.mock.calls[0][0]).toHaveProperty('body', buf);
+  expect(secureRequest.mock.calls[0][0]).toMatchSnapshot();
 })

@@ -1,40 +1,36 @@
 const aws4 = require('aws4');
 const https = require('https');
 const http = require('http');
-const request = require('./request'); 
 
 const DEFAULT_OPTIONS = {
-  port: 443,
-  dry: false,
+  secure: true,
 };
 
-const assumeHeaders = (data) => 
-  data && data instanceof Buffer 
-    ? { 'Content-Type': 'application/octet-stream' }
-    : { 'Content-Type': 'application/json' };
-
-const assumeBody = (data) => 
-  data && data instanceof Buffer 
-    ? data
-    : JSON.stringify(data);
-
-const createPublisher = ({ requestContext }, opts = DEFAULT_OPTIONS) => (data) => {
-  const { domainName, connectionId, stage } = requestContext;
-  const signedRequest = aws4.sign({
-    path: `/${stage}/%40connections/${encodeURIComponent(connectionId)}`,
-    headers: assumeHeaders(data),
-    body: assumeBody(data),
-    host: domainName,
-    method: 'POST',
+const request = ({ method, options }) => new Promise((resolve, reject) => {
+  const { body } = options;
+  const req = method.request(options, ({ statusCode }) => {
+    resolve(statusCode === 200);
   });
+  req.on('error', () => resolve(false));
+  req.write(body);
+  req.end();
+});
 
-  if (opts.dry) {
-    console.log(`Requesting on port ${opts.port}`, JSON.stringify(signedRequest, null, 2));
-    return;
-  }
+const createRequest = (data, { stage, domainName, connectionId }) => aws4.sign({
+  path: `/${stage}/%40connections/${encodeURIComponent(connectionId)}`,
+  host: domainName,
+  method: 'POST',
+  headers: data && data instanceof Buffer 
+    ? { 'Content-Type': 'application/octet-stream' }
+    : { 'Content-Type': 'application/json' },
+  body: data && data instanceof Buffer 
+    ? data
+    : JSON.stringify(data),
+})
 
-  const method = opts.port === 443 ? https : http;
-  return request(method, signedRequest);
-};
+const createPublisher = ({ requestContext }, opts = DEFAULT_OPTIONS) => (data) => request({
+  options: createRequest(data, requestContext),
+  method: opts.secure ? https : http, 
+});
 
 module.exports = createPublisher;
