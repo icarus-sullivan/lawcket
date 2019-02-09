@@ -1,6 +1,6 @@
 {
   "name": "@lws/body-parser",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "Middleware for @lws/websocket that parses body information",
   "main": "index.js",
   "scripts": {

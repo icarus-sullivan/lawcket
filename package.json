@@ -1,12 +1,6 @@
 {
-  "name": "@lws/repo",
-  "version": "0.0.0",
-  "description": "Base configuration for the multi-repo packages",
-  "main": "index.js",
-  "scripts": {
-    "version": "lerna version",
-    "lint": "eslint . --ext .js"
-  },
+  "name": "root",
+  "public": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/icarus-sullivan/lws.git"

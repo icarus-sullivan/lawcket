@@ -1,6 +1,6 @@
 {
   "name": "@lws/publisher",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "Middleware for @lws/websocket injects send method",
   "main": "index.js",
   "scripts": {
