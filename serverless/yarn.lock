@@ -12,7 +12,7 @@
 
 "@lws/config@git+https://github.com/icarus-sullivan/lws.git#master":
   version "1.0.0"
-  resolved "git+https://github.com/icarus-sullivan/lws.git#f6e05b9af53ad6c1870ecc0dc90343d087123918"
+  resolved "git+https://github.com/icarus-sullivan/lws.git#0845ba66473266ab7c5ca49def966518b094ee80"
 
 "@serverless/utils@0.0.20":
   version "0.0.20"

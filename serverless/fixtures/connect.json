@@ -1,0 +1,42 @@
+{
+	"headers": {
+		"Host": "fake.com",
+		"X-Forwarded-For": "fake-ip",
+		"X-Forwarded-Port": "443",
+		"X-Forwarded-Proto": "https"
+	},
+	"multiValueHeaders": {
+	},
+	"requestContext": {
+		"routeKey": "$connect",
+		"authorizer": "",
+		"messageId": null,
+		"integrationLatency": "",
+		"eventType": "CONNECT",
+		"error": "",
+		"extendedRequestId": "ext-id",
+		"requestTime": "date",
+		"messageDirection": "IN",
+		"stage": "dev",
+		"identity": {
+			"cognitoIdentityPoolId": null,
+			"accountId": null,
+			"cognitoIdentityId": null,
+			"caller": null,
+			"sourceIp": "source-ip",
+			"accessKey": null,
+			"cognitoAuthenticationType": null,
+			"cognitoAuthenticationProvider": null,
+			"userArn": null,
+			"userAgent": null,
+			"user": null
+		},
+		"requestId": "U2PH2HRRvHcFitw=",
+		"domainName": "fake.execute-api.us-west-2.amazonaws.com",
+		"connectionId": "U2PH2clMPHcCHnA=",
+		"apiId": "fake",
+		"status": ""
+	},
+	"isBase64Encoded": false,
+	"body": {}
+}

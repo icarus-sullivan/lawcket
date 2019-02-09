@@ -16,14 +16,17 @@ class DynamoPlugin {
     }
 
     this.options = options;
+    this.connect = this.connect.bind(this);
+    this.close = this.close.bind(this);
   }
 
   async connect({ requestContext }) {
+    const { tableName, additionalSyncFields } = this.options;
     const { connectionId, domainName, stage } = requestContext;
     return doc.put({
-      TableName: this.options.tableName,
+      TableName: tableName,
       Item: {
-        ...this.options.additionalSyncFields,
+        ...additionalSyncFields,
         connectionId,
         domainName,
         stage,
@@ -32,9 +35,10 @@ class DynamoPlugin {
   }
 
   async close({ requestContext }) {
+    const { tableName } = this.options;
     const { connectionId } = requestContext;
     return doc.delete({
-      TableName: this.options.tableName,
+      TableName: tableName,
       Key: { connectionId },
     }).promise();
   }

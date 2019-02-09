@@ -1,5 +1,6 @@
 const DynamoPlugin = require('@lws/config/packages/dynamo');
-const PublisherPlugin = require('@lws/config/packages/publisher');
+const publisherMiddleware = require('@lws/config/packages/publisher');
+const bodyParser = require('@lws/config/packages/body-parser');
 const LambdaWebSocket = require('@lws/config/packages/websocket');
 
 const dynamoPlugin = new DynamoPlugin({
@@ -9,28 +10,27 @@ const dynamoPlugin = new DynamoPlugin({
   },
 });
 
-const publisherPlugin = new PublisherPlugin({
-  secure: true,
-});
+console.log('dynamoPlugin', dynamoPlugin);
 
 const lambdaSocket = new LambdaWebSocket({
+  middleware: [bodyParser, publisherMiddleware],
   plugins: [
     dynamoPlugin,
-    publisherPlugin,
   ],
 });
 
 lambdaSocket.on('connect', async (event) => {
-  
+  console.log('connect event', JSON.stringify(event, null, 2));
 });
 
-lambdaSocket.on('message', async ({ send }) => {
-
-  await send({ message: 'hello from server' });
+lambdaSocket.on('message', async (event) => {
+  console.log('message event', JSON.stringify(event, null, 2));
+  console.log('has send method', event.hasOwnProperty('send'));
+  await event.send({ message: 'hello from server' });
 });
 
 lambdaSocket.on('close', async (event) => {
-
+  console.log('close event', JSON.stringify(event, null, 2));
 });
 
 module.exports = {

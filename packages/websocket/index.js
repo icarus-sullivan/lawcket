@@ -7,43 +7,25 @@ const EVENT_MAPPING = {
 
 const VALID_EVENTS = Object.values(EVENT_MAPPING);
 
+const filterCbs = (m, ps) => ps.filter((p) => p[m]).map((p) => p[m]);
+
 class LambdaWebSocket {
   constructor({ middleware, plugins }) {
     this.callbacks = {
-      connect: [],
-      close: [],
-      message: [],
+      connect: filterCbs('connect', plugins),
+      close: filterCbs('close', plugins),
+      message: filterCbs('message', plugins),
     };
 
     this.middleware = middleware || [];
-    for (const plugin of plugins) {
-      if (plugin.hasOwnProperty('close')) {
-        this.callbacks.close.push(plugin.close);
-      }
-      if (plugin.hasOwnProperty('connect')) {
-        this.callbacks.connect.push(plugin.connect);
-      }
-      if (plugin.hasOwnProperty('message')) {
-        this.callbacks.message.push(plugin.message);
-      }
-    }
   }
 
   createHandler() {
     const socket = this;
     return async (event) => {
       const modifiedEvent = socket.middleware.reduce((a, m) => m(a), event);
-      // {
-      //   headers, body, isBase64Encoded, requestContext,
-      // }
-      // const type = requestContext.eventType;
-      // const cleanedRequest = {
-      //   body: deserializeBody({ body, isBase64Encoded }),
-      //   headers,
-      //   requestContext,
-      // };
-
-      // const callbacks = socket.callbacks[EVENT_MAPPING[type]];
+      const type = modifiedEvent.requestContext.eventType;
+      const callbacks = socket.callbacks[EVENT_MAPPING[type]];
       await Promise.all(callbacks.map((fn) => fn(modifiedEvent)));
 
       return { statusCode: '200' };
