@@ -1,7 +1,7 @@
 {
-  "name": "@lws/publisher",
+  "name": "@lws/body-parser",
   "version": "1.0.0",
-  "description": "Middleware for @lws/websocket injects send method",
+  "description": "Middleware for @lws/websocket parses body information",
   "main": "index.js",
   "scripts": {
     "test": "jest"
@@ -25,7 +25,7 @@
   "author": "Chris Sullivan",
   "license": "MIT",
   "dependencies": {
-    "aws4": "^1.8.0"
+    "aws-sdk": "^2.395.0"
   },
   "devDependencies": {
     "jest": "^24.0.0"

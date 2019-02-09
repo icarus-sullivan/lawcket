@@ -5,59 +5,40 @@ const doc = new AWS.DynamoDB.DocumentClient();
 
 const DEFAULT_OPTIONS = {
   tableName: '',
-  sync: false,
+  additionalSyncFields: {},
 };
 
-const createRequest = ({
-  tableName, connectionId, domainName, stage,
-}, additional = {}) => ({
-  TableName: tableName,
-  Item: {
-    ...additional,
-    connectionId,
-    domainName,
-    stage,
-  },
-});
+class DynamoPlugin {
+  constructor(opts) {
+    const options = { ...DEFAULT_OPTIONS, ...opts };
+    if (!options || !options.tableName) {
+      throw new Error('Must provide a tableName to sync clients with');
+    }
 
-const baseRequest = ({ tableName, connectionId }) => ({
-  TableName: tableName,
-  Key: { connectionId },
-});
-
-module.exports = (opts = DEFAULT_OPTIONS) => async (requestContext, addtionalFields = {}) => {
-  const options = { ...DEFAULT_OPTIONS, ...opts };
-  if (!options || !options.tableName) {
-    throw new Error('Must provide a tableName to sync clients with');
+    this.options = options;
   }
 
-  if (!options.sync) {
-    return requestContext;
+  async connect({ requestContext }) {
+    const { connectionId, domainName, stage } = requestContext;
+    return doc.put({
+      TableName: this.options.tableName,
+      Item: {
+        ...this.options.additionalSyncFields,
+        connectionId,
+        domainName,
+        stage,
+      },
+    }).promise();
   }
 
-  const mergedRequest = { ...requestContext, ...options };
-  switch (mergedRequest.eventType) {
-    case 'CONNECT': {
-      const request = createRequest(mergedRequest, addtionalFields);
-      await doc.put(request).promise();
-      break;
-    }
-    case 'DISCONNECT': {
-      const request = baseRequest(mergedRequest);
-      await doc.delete(request).promise();
-      break;
-    }
-    case 'MESSAGE': {
-      const request = baseRequest(mergedRequest);
-      const restored = await doc.get(request).promise();
-      return restored && restored.Item
-        ? restored.Item
-        : requestContext;
-    }
-    default: {
-      break;
-    }
+  async close({ requestContext }) {
+    const { connectionId } = requestContext;
+    return doc.delete({
+      TableName: this.options.tableName,
+      Key: { connectionId },
+    }).promise();
   }
+}
 
-  return requestContext;
-};
+
+module.exports = DynamoPlugin;

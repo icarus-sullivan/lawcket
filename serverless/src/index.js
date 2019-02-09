@@ -1,29 +1,36 @@
-const dynamoSync = require('lws/packages/dynamo');
-const createPublisher = require('lws/packages/publisher');
-const LambdaWebSocket = require('lws/packages/websocket');
+const DynamoPlugin = require('@lws/config/packages/dynamo');
+const PublisherPlugin = require('@lws/config/packages/publisher');
+const LambdaWebSocket = require('@lws/config/packages/websocket');
 
-const dynamo = dynamoSync({
+const dynamoPlugin = new DynamoPlugin({
   tableName: process.env.CONNECTIONS_TABLE,
-  sync: true,
+  additionalSyncFields: {
+    channel: '#general',
+  },
 });
 
-const lambdaSocket = new LambdaWebSocket();
+const publisherPlugin = new PublisherPlugin({
+  secure: true,
+});
+
+const lambdaSocket = new LambdaWebSocket({
+  plugins: [
+    dynamoPlugin,
+    publisherPlugin,
+  ],
+});
 
 lambdaSocket.on('connect', async (event) => {
-  await dynamo.sync(event, {
-    channel: 'gifs',
-  });
+  
 });
 
-lambdaSocket.on('message', async (event) => {
-  const connection = await dynamo.restore(event);
-  const send = await createPublisher(connection);
+lambdaSocket.on('message', async ({ send }) => {
 
   await send({ message: 'hello from server' });
 });
 
-lambdaSocket.on('disconnect', async (event) => {
-  await dynamo.release(event);
+lambdaSocket.on('close', async (event) => {
+
 });
 
 module.exports = {

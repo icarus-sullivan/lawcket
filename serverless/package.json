@@ -19,6 +19,7 @@
     "serverless-websockets-plugin": "^1.0.0"
   },
   "dependencies": {
+    "@lws/config": "git+https://github.com/icarus-sullivan/lws.git#master",
     "aws-sdk": "^2.395.0",
     "aws4": "^1.8.0",
     "lws": "git+https://github.com/icarus-sullivan/lws.git#master"
