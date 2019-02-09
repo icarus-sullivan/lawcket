@@ -23,6 +23,7 @@ class DynamoPlugin {
   async connect({ requestContext }) {
     const { tableName, additionalSyncFields } = this.options;
     const { connectionId, domainName, stage } = requestContext;
+    console.log('doc.put', doc.put);
     return doc.put({
       TableName: tableName,
       Item: {
