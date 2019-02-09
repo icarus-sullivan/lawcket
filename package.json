@@ -1,9 +1,10 @@
 {
-  "name": "@lws/config",
-  "version": "1.0.0",
-  "description": "Common configuration across repo",
+  "name": "@lws/repo",
+  "version": "0.0.1",
+  "description": "Base configuration for the multi-repo packages",
   "main": "index.js",
   "scripts": {
+    "version": "lerna version",
     "lint": "eslint . --ext .js"
   },
   "repository": {
@@ -20,6 +21,7 @@
     "eslint": "^5.13.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.16.0",
-    "eslint-plugin-jest": "^22.2.2"
+    "eslint-plugin-jest": "^22.2.2",
+    "lerna": "^3.11.0"
   }
 }
