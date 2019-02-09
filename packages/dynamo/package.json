@@ -1,6 +1,6 @@
 {
   "name": "@lawcket/dynamo",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "@lawcket/websocket plugin: stores, syncs and releases websocket clients to dynamo",
   "main": "index.js",
   "scripts": {
