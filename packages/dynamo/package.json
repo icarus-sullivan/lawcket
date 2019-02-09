@@ -1,11 +1,14 @@
 {
   "name": "@lws/dynamo",
   "version": "0.0.1",
-  "description": "Stores, syncs and releases websocket clients to dynamo",
+  "description": "@lws/websocket plugin: stores, syncs and releases websocket clients to dynamo",
   "main": "index.js",
   "scripts": {
     "test": "jest"
   },
+  "files": [
+    "index.js"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/icarus-sullivan/lws.git"

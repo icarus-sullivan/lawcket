@@ -15,7 +15,8 @@ const VALID_EVENTS = Object.values(EVENT_MAPPING);
 const filterCbs = (m, ps) => ps.filter((p) => p[m]).map((p) => p[m]);
 
 class LambdaWebSocket {
-  constructor({ middleware, plugins } = DEFAULT_OPTIONS) {
+  constructor(opts = {}) {
+    const { plugins, middleware } = { ...DEFAULT_OPTIONS, ...opts };
     this.callbacks = {
       connect: filterCbs('connect', plugins),
       close: filterCbs('close', plugins),
@@ -32,7 +33,6 @@ class LambdaWebSocket {
       const type = modifiedEvent.requestContext.eventType;
       const callbacks = socket.callbacks[EVENT_MAPPING[type]];
       await Promise.all(callbacks.map((fn) => fn(modifiedEvent)));
-
       return { statusCode: '200' };
     };
   }

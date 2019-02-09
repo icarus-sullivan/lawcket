@@ -1,5 +1,5 @@
 
-const deserializeBody = ({ isBase64Encoded, body = '{}' }) => {
+const deserializeBody = ({ isBase64Encoded = false, body = '{}' }) => {
   try {
     const debuff = Buffer.from(body, isBase64Encoded ? 'base64' : undefined);
     const o = JSON.parse(debuff);

@@ -1,65 +1,34 @@
-// eslint-disable-next-line import/no-unresolved
-const { sign } = require('aws4');
-const { request } = require('http');
-const { request: secureRequest } = require('https');
-const createPublisher = require('../');
+const publishMiddleware = require('../');
 
-jest.mock('aws4');
-jest.mock('http');
-jest.mock('https');
-
-const fakeEvent = {
-  requestContext: {
-    routeKey: '$default',
-    authorizer: '',
-    messageId: 'UgfzGcrpvHcCJyg=',
-    integrationLatency: '',
-    eventType: 'MESSAGE',
-    error: '',
-    extendedRequestId: 'UgfzGG6RvHcF8GA=',
-    requestTime: '03/Feb/2019:05:18:37 +0000',
-    messageDirection: 'IN',
-    stage: 'dev',
-    requestId: 'UgfzGG6RvHcF8GA=',
-    domainName: '70xqba8pp4.execute-api.us-west-2.amazonaws.com',
-    connectionId: 'UgfywcrkvHcCJyg=',
-    apiId: '70xqba8pp4',
-    status: '',
-  },
+const fakeRequest = {
+  eventType: 'MESSAGE',
+  stage: 'unit',
+  domainName: 'test.execute-api.us-west-2.amazonaws.com',
+  connectionId: 'testId',
 };
 
-const mockReq = (fn) => fn.mockImplementation((p, cb) => {
-  cb({ statusCode: 200 });
-  return {
-    write: jest.fn(),
-    on: jest.fn(),
-    end: jest.fn(),
-  };
+const makeEvent = (eventType) => ({
+  requestContext: {
+    ...fakeRequest,
+    eventType,
+  },
 });
 
 beforeEach(() => {
   jest.resetAllMocks();
-  sign.mockImplementation((args) => args);
 });
 
-test('http', async () => {
-  mockReq(request);
-  const send = createPublisher(fakeEvent, { secure: false });
-  await send('hi');
-  expect(request.mock.calls[0][0]).toMatchSnapshot();
+test('CONNECT', async () => {
+  const event = makeEvent('CONNECT');
+  expect(publishMiddleware(event)).not.toHaveProperty('send');
 });
 
-test('https', async () => {
-  mockReq(secureRequest);
-  const send = createPublisher(fakeEvent, { secure: true });
-  await send('hi');
-  expect(secureRequest.mock.calls[0][0]).toMatchSnapshot();
+test('DISCONNECT', async () => {
+  const event = makeEvent('DISCONNECT');
+  expect(publishMiddleware(event)).not.toHaveProperty('send');
 });
 
-test('buffer data', async () => {
-  mockReq(secureRequest);
-  const send = createPublisher(fakeEvent, { secure: true });
-  const buf = Buffer.from([0x88, 0x02]);
-  await send(buf);
-  expect(secureRequest.mock.calls[0][0]).toMatchSnapshot();
+test('MESSAGE', async () => {
+  const event = makeEvent('MESSAGE');
+  expect(publishMiddleware(event)).toHaveProperty('send');
 });
