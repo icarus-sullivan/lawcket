@@ -1,6 +1,6 @@
 {
   "name": "@lws/dynamo",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Stores, syncs and releases websocket clients to dynamo",
   "main": "index.js",
   "scripts": {

@@ -34,7 +34,9 @@ const createPublisher = ({ requestContext }, opts = DEFAULT_OPTIONS) => (data) =
   method: opts.secure ? https : http,
 });
 
-module.exports = (event) => ({
-  ...event,
-  send: createPublisher(event, { secure: true }),
-});
+module.exports = (event) => (event.requestContext.eventType === 'MESSAGE'
+  ? ({
+    ...event,
+    send: createPublisher(event, { secure: true }),
+  })
+  : event);

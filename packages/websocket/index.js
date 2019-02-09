@@ -5,12 +5,17 @@ const EVENT_MAPPING = {
   MESSAGE: 'message',
 };
 
+const DEFAULT_OPTIONS = {
+  middleware: [],
+  plugins: [],
+};
+
 const VALID_EVENTS = Object.values(EVENT_MAPPING);
 
 const filterCbs = (m, ps) => ps.filter((p) => p[m]).map((p) => p[m]);
 
 class LambdaWebSocket {
-  constructor({ middleware, plugins }) {
+  constructor({ middleware, plugins } = DEFAULT_OPTIONS) {
     this.callbacks = {
       connect: filterCbs('connect', plugins),
       close: filterCbs('close', plugins),

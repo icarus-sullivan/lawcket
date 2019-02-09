@@ -1,7 +1,7 @@
-const DynamoPlugin = require('@lws/config/packages/dynamo');
-const publisherMiddleware = require('@lws/config/packages/publisher');
-const bodyParser = require('@lws/config/packages/body-parser');
-const LambdaWebSocket = require('@lws/config/packages/websocket');
+const DynamoPlugin = require('@lws/dynamo');
+const publisherMiddleware = require('@lws/publisher');
+const bodyParser = require('@lws/body-parser');
+const LambdaWebSocket = require('@lws/websocket');
 
 const dynamoPlugin = new DynamoPlugin({
   tableName: process.env.CONNECTIONS_TABLE,
@@ -10,8 +10,6 @@ const dynamoPlugin = new DynamoPlugin({
   },
 });
 
-console.log('dynamoPlugin', dynamoPlugin);
-
 const lambdaSocket = new LambdaWebSocket({
   middleware: [bodyParser, publisherMiddleware],
   plugins: [
@@ -19,18 +17,19 @@ const lambdaSocket = new LambdaWebSocket({
   ],
 });
 
-lambdaSocket.on('connect', async (event) => {
-  console.log('connect event', JSON.stringify(event, null, 2));
+lambdaSocket.on('connect', async ({ headers, requestContext }) => {
+  // do authorization here with headers. If unauthorized throw an error.
+  console.log('headers', headers);
+  console.log('client connected', requestContext.connectionId);
 });
 
-lambdaSocket.on('message', async (event) => {
-  console.log('message event', JSON.stringify(event, null, 2));
-  console.log('has send method', event.hasOwnProperty('send'));
-  await event.send({ message: 'hello from server' });
+lambdaSocket.on('message', async ({ body, send }) => {
+  console.log('client said', body);
+  await send({ message: 'hello from server' });
 });
 
 lambdaSocket.on('close', async (event) => {
-  console.log('close event', JSON.stringify(event, null, 2));
+  console.log('client closed', event.requestContext.connectionId);
 });
 
 module.exports = {
