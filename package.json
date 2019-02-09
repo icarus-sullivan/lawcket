@@ -3,14 +3,14 @@
   "public": true,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/icarus-sullivan/lws.git"
+    "url": "git+https://github.com/icarus-sullivan/lawcket.git"
   },
   "author": "Chris Sullivan",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/icarus-sullivan/lws/issues"
+    "url": "https://github.com/icarus-sullivan/lawcket/issues"
   },
-  "homepage": "https://github.com/icarus-sullivan/lws#readme",
+  "homepage": "https://github.com/icarus-sullivan/lawcket#readme",
   "devDependencies": {
     "eslint": "^5.13.0",
     "eslint-config-airbnb-base": "^13.1.0",

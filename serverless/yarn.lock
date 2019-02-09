@@ -10,9 +10,9 @@
     core-js "^2.5.7"
     regenerator-runtime "^0.12.0"
 
-"@lws/config@git+https://github.com/icarus-sullivan/lws.git#master":
+"@lawcket/config@git+https://github.com/icarus-sullivan/lawcket.git#master":
   version "1.0.0"
-  resolved "git+https://github.com/icarus-sullivan/lws.git#0845ba66473266ab7c5ca49def966518b094ee80"
+  resolved "git+https://github.com/icarus-sullivan/lawcket.git#0845ba66473266ab7c5ca49def966518b094ee80"
 
 "@serverless/utils@0.0.20":
   version "0.0.20"

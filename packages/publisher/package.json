@@ -1,7 +1,7 @@
 {
-  "name": "@lws/publisher",
+  "name": "@lawcket/publisher",
   "version": "0.0.1",
-  "description": "Middleware for @lws/websocket injects send method",
+  "description": "Middleware for @lawcket/websocket injects send method",
   "main": "index.js",
   "scripts": {
     "test": "jest"
@@ -11,10 +11,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/icarus-sullivan/lws.git"
+    "url": "https://github.com/icarus-sullivan/lawcket.git"
   },
   "bugs": {
-    "url": "https://github.com/icarus-sullivan/lws/issues"
+    "url": "https://github.com/icarus-sullivan/lawcket/issues"
   },
   "keywords": [
     "lambda",

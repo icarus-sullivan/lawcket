@@ -1,5 +1,5 @@
 {
-  "name": "@lws/websocket",
+  "name": "@lawcket/websocket",
   "version": "0.0.1",
   "description": "A pluggable API Gateway Lambda wrapper that mimics server websockets",
   "main": "index.js",
@@ -11,10 +11,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/icarus-sullivan/lws.git"
+    "url": "https://github.com/icarus-sullivan/lawcket.git"
   },
   "bugs": {
-    "url": "https://github.com/icarus-sullivan/lws/issues"
+    "url": "https://github.com/icarus-sullivan/lawcket/issues"
   },
   "keywords": [
     "lambda",

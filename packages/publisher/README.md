@@ -1,16 +1,16 @@
-# @lws/publisher
+# @lawcket/publisher
 ![Downloads][link-download] ![Version][link-version] ![License][link-license]
 
-#### Middleware for @lws/websocket that parses body information
+#### Middleware for @lawcket/websocket that parses body information
 
 ## Installation
 
 ```sh
-npm install @lws/websocket @lws/publisher
+npm install @lawcket/websocket @lawcket/publisher
 ```
 or
 ```sh
-yarn add @lws/websocket @lws/publisher
+yarn add @lawcket/websocket @lawcket/publisher
 ```
 
 ## Usage
@@ -18,8 +18,8 @@ yarn add @lws/websocket @lws/publisher
 Sending a message back to the client will not work for `close` and `connect` events. These instances operate in a handshake mode, or connection disruptions mode. This means that only the `message` event will allow you to send messages back to the client. 
 
 ```javascript
-const publisherMiddleware = require('@lws/publisher');
-const LambdaWebSocket = require('@lws/websocket');
+const publisherMiddleware = require('@lawcket/publisher');
+const LambdaWebSocket = require('@lawcket/websocket');
 
 const lambdaSocket = new LambdaWebSocket({
   middleware: [publisherMiddleware],
@@ -41,6 +41,6 @@ module.exports = {
 
 ```
 
-[link-download]: https://img.shields.io/npm/dt/@lws/publisher.svg
-[link-version]: https://img.shields.io/npm/v/@lws/publisher.svg
-[link-license]: https://img.shields.io/npm/l/@lws/publisher.svg
+[link-download]: https://img.shields.io/npm/dt/@lawcket/publisher.svg
+[link-version]: https://img.shields.io/npm/v/@lawcket/publisher.svg
+[link-license]: https://img.shields.io/npm/l/@lawcket/publisher.svg

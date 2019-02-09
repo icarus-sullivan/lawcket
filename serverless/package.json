@@ -1,5 +1,5 @@
 {
-  "name": "lws",
+  "name": "lawcket",
   "version": "1.0.0",
   "description": "A sample project showing all the lambda websocket pieces together",
   "main": "handler.js",
@@ -19,7 +19,7 @@
     "serverless-websockets-plugin": "^1.0.0"
   },
   "dependencies": {
-    "@lws/config": "git+https://github.com/icarus-sullivan/lws.git#master",
+    "@lawcket/config": "git+https://github.com/icarus-sullivan/lawcket.git#master",
     "aws-sdk": "^2.395.0",
     "aws4": "^1.8.0"
   }

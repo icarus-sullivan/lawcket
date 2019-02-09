@@ -1,10 +1,10 @@
-# A multi-repo for @lws/websocket, plugins and middleware
+# A multi-repo for @lawcket/websocket, plugins and middleware
 
-[@lws/websocket](https://github.com/icarus-sullivan/lws/tree/master/packages/websocket)
+[@lawcket/websocket](https://github.com/icarus-sullivan/lawcket/tree/master/packages/websocket)
 
-[@lws/body-parser](https://github.com/icarus-sullivan/lws/tree/master/packages/body-parser)
+[@lawcket/body-parser](https://github.com/icarus-sullivan/lawcket/tree/master/packages/body-parser)
 
-[@lws/dynamo](https://github.com/icarus-sullivan/lws/tree/master/packages/dynamo)
+[@lawcket/dynamo](https://github.com/icarus-sullivan/lawcket/tree/master/packages/dynamo)
 
-[@lws/publisher](https://github.com/icarus-sullivan/lws/tree/master/packages/publisher)
+[@lawcket/publisher](https://github.com/icarus-sullivan/lawcket/tree/master/packages/publisher)
 

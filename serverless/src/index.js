@@ -1,7 +1,7 @@
-const DynamoPlugin = require('@lws/dynamo');
-const publisherMiddleware = require('@lws/publisher');
-const bodyParser = require('@lws/body-parser');
-const LambdaWebSocket = require('@lws/websocket');
+const DynamoPlugin = require('@lawcket/dynamo');
+const publisherMiddleware = require('@lawcket/publisher');
+const bodyParser = require('@lawcket/body-parser');
+const LambdaWebSocket = require('@lawcket/websocket');
 
 const dynamoPlugin = new DynamoPlugin({
   tableName: process.env.CONNECTIONS_TABLE,
