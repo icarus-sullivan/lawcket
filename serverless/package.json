@@ -19,7 +19,10 @@
     "serverless-websockets-plugin": "^1.0.0"
   },
   "dependencies": {
-    "@lawcket/config": "git+https://github.com/icarus-sullivan/lawcket.git#master",
+    "@lawcket/body-parser": "^0.0.1",
+    "@lawcket/dynamo": "^0.0.1",
+    "@lawcket/publisher": "^0.0.1",
+    "@lawcket/websocket": "^0.0.1",
     "aws-sdk": "^2.395.0",
     "aws4": "^1.8.0"
   }

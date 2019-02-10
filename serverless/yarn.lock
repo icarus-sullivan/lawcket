@@ -10,9 +10,31 @@
     core-js "^2.5.7"
     regenerator-runtime "^0.12.0"
 
-"@lawcket/config@git+https://github.com/icarus-sullivan/lawcket.git#master":
-  version "1.0.0"
-  resolved "git+https://github.com/icarus-sullivan/lawcket.git#0845ba66473266ab7c5ca49def966518b094ee80"
+"@lawcket/body-parser@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@lawcket/body-parser/-/body-parser-0.0.1.tgz#99fb3285cc0eedc789af3e0d0cf44e80e798373b"
+  integrity sha512-+h/wQlHWeztbTdxnEKefeWCrXzdVq/z9BoQ2hV4DTY09CyOrAyHR6TSJeeoab6vpgmYVLBDbFAKZK/gNpIAeKg==
+  dependencies:
+    aws-sdk "^2.395.0"
+
+"@lawcket/dynamo@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@lawcket/dynamo/-/dynamo-0.0.1.tgz#5d4af26c7d6d1ef38adf388a854a2cc25ee0e6ac"
+  integrity sha512-sAj3iAlr0e75I4zMVqSyXY18FL8qSTEEAmso9k4DkUXqmJgAMob19EugtxYDRE+RyufYXA2eug6++AUlQGq7/g==
+  dependencies:
+    aws-sdk "^2.395.0"
+
+"@lawcket/publisher@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@lawcket/publisher/-/publisher-0.0.1.tgz#2c7d6b2886a30788c1d01ab0c30c48c0d4d33d6e"
+  integrity sha512-WSyHDOxgVaPu0e5IFpkW7PPTVGM/kmflR0774INYVzcuLIJanTgpbJaSvsfEaqSqUIwqx5ORZBu/gsXZAaXIXA==
+  dependencies:
+    aws4 "^1.8.0"
+
+"@lawcket/websocket@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@lawcket/websocket/-/websocket-0.0.1.tgz#7fa09b0947bc54f8581da7e160d9f64f997edba3"
+  integrity sha512-zT8aemeUN4lpy4waJt7NB+A/yc85KASXOfig/0WtVMxt6YscD/kaHtmCREOQOwX6FVTtSjzerQwvgFp79tJ6qA==
 
 "@serverless/utils@0.0.20":
   version "0.0.20"

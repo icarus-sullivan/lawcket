@@ -11,7 +11,7 @@ npm install -D serverless-websockets-plugin
 ```
 or
 ```sh
-yarn add @lawcket/websocket @lawcket/websocket
+yarn add @lawcket/websocket
 yarn add -D serverless-websockets-plugin
 ```
 
@@ -62,6 +62,17 @@ module.exports = {
   default: lambdaSocket.createHandler(),
 };
 ```
+
+#### Middleware
+| Name | Description |
+|--|--|
+| [@lawcket/body-parser](https://www.npmjs.com/package/@lawcket/body-parser) | Automatically parse incoming base64 or stringified json | 
+| [@lawcket/publisher](https://www.npmjs.com/package/@lawcket/publisher) | Injects a `send` method during the message event. Used to send data to  the client | 
+
+#### Plugins
+| Name | Description | 
+|--|--|
+| [@lawcket/dynamo](https://www.npmjs.com/package/@lawcket/dynamo) | Hooks into connect and close events to sync connections to Dynamo |
 
 #### Caveats
 
