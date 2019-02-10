@@ -1,6 +1,6 @@
 {
   "name": "@lawcket/body-parser",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Middleware for @lawcket/websocket that parses body information",
   "main": "index.js",
   "scripts": {
