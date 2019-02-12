@@ -19,7 +19,6 @@ const lambdaSocket = new LambdaWebSocket({
 
 lambdaSocket.on('connect', async ({ headers, requestContext }) => {
   // do authorization here with headers. If unauthorized throw an error.
-  console.log('headers', headers);
   console.log('client connected', requestContext.connectionId);
 });
 

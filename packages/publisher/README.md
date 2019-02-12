@@ -1,7 +1,7 @@
 # @lawcket/publisher
 ![Downloads][link-download] ![Version][link-version] ![License][link-license]
 
-#### Middleware for @lawcket/websocket that parses body information
+#### Middleware for @lawcket/websocket injects send method
 
 ## Installation
 

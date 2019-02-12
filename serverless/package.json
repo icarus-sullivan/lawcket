@@ -4,6 +4,7 @@
   "description": "A sample project showing all the lambda websocket pieces together",
   "main": "handler.js",
   "scripts": {
+    "upgrade:lib": "yarn upgrade -S @lawcket --latest",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -19,10 +20,10 @@
     "serverless-websockets-plugin": "^1.0.0"
   },
   "dependencies": {
-    "@lawcket/body-parser": "^0.0.1",
-    "@lawcket/dynamo": "^0.0.1",
-    "@lawcket/publisher": "^0.0.1",
-    "@lawcket/websocket": "^0.0.1",
+    "@lawcket/body-parser": "^0.0.3",
+    "@lawcket/dynamo": "^0.0.3",
+    "@lawcket/publisher": "^0.0.3",
+    "@lawcket/websocket": "^0.0.3",
     "aws-sdk": "^2.395.0",
     "aws4": "^1.8.0"
   }
