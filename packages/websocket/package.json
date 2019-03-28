@@ -1,6 +1,6 @@
 {
   "name": "@lawcket/websocket",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "A pluggable API Gateway Lambda wrapper that mimics server websockets",
   "main": "index.js",
   "scripts": {
@@ -29,5 +29,10 @@
   "license": "MIT",
   "devDependencies": {
     "jest": "^24.0.0"
+  },
+  "dependencies": {
+    "@lawcket/body-parser": "^0.0.4",
+    "@lawcket/fn": "^0.0.4",
+    "@lawcket/publisher": "^0.0.4"
   }
 }

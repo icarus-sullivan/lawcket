@@ -20,15 +20,15 @@ beforeEach(() => {
 
 test('CONNECT', async () => {
   const event = makeEvent('CONNECT');
-  expect(publishMiddleware(event)).not.toHaveProperty('send');
+  expect(publishMiddleware(event)).not.toBeDefined();
 });
 
 test('DISCONNECT', async () => {
   const event = makeEvent('DISCONNECT');
-  expect(publishMiddleware(event)).not.toHaveProperty('send');
+  expect(publishMiddleware(event)).not.toBeDefined();
 });
 
 test('MESSAGE', async () => {
   const event = makeEvent('MESSAGE');
-  expect(publishMiddleware(event)).toHaveProperty('send');
+  expect(publishMiddleware(event)).toBeDefined();
 });

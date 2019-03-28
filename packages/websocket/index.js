@@ -1,3 +1,6 @@
+const { pipe, broadcast } = require('@lawcket/fn');
+const publisher = require('@lawcket/publisher');
+const bodyParser = require('@lawcket/body-parser');
 
 const EVENT_MAPPING = {
   CONNECT: 'connect',
@@ -5,47 +8,24 @@ const EVENT_MAPPING = {
   MESSAGE: 'message',
 };
 
-const DEFAULT_OPTIONS = {
-  middleware: [],
-  plugins: [],
-};
+module.exports = (handler, { middleware = [], plugins = [] } = {}) => async (event) => {
+  try {
+    const evt = await pipe(bodyParser, ...middleware)(event);
+    const publish = await publisher(evt);
 
-const VALID_EVENTS = Object.values(EVENT_MAPPING);
+    const { connectionId, domainName, stage, eventType } = evt.requestContext;
+    const connection = {
+      event: EVENT_MAPPING[eventType],
+      connectionId,
+      domainName,
+      stage,
+    }
 
-const filterCbs = (m, ps) => ps.filter((p) => p[m]).map((p) => p[m]);
-
-class LambdaWebSocket {
-  constructor(opts = {}) {
-    const { plugins, middleware } = { ...DEFAULT_OPTIONS, ...opts };
-    this.callbacks = {
-      connect: filterCbs('connect', plugins),
-      close: filterCbs('close', plugins),
-      message: filterCbs('message', plugins),
+    await broadcast(handler, ...plugins)(evt, connection, publish);
+    return {
+      statusCode: '200'
     };
-
-    this.middleware = middleware || [];
-  }
-
-  createHandler() {
-    const socket = this;
-    return async (event) => {
-      const modifiedEvent = socket.middleware.reduce((a, m) => m(a), event);
-      const type = modifiedEvent.requestContext.eventType;
-      const callbacks = socket.callbacks[EVENT_MAPPING[type]];
-      await Promise.all(callbacks.map((fn) => fn(modifiedEvent)));
-      return { statusCode: '200' };
-    };
+  } catch (e) {
+    throw e;
   }
 }
-
-LambdaWebSocket.prototype.on = function (name, fn) {
-  if (!name || !fn) {
-    throw new Error('event name or function undefined');
-  }
-  if (VALID_EVENTS.indexOf(name) === -1) {
-    throw new Error(`${name} is an unsupported event name`);
-  }
-  this.callbacks[name].push(fn);
-};
-
-module.exports = LambdaWebSocket;

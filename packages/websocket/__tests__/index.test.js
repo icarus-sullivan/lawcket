@@ -1,4 +1,4 @@
-const LambdaWebSocket = require('../');
+const lawcket = require('../');
 
 const buildEvent = (event) => ({
   requestContext: {
@@ -10,113 +10,86 @@ const buildEvent = (event) => ({
   body: '',
 });
 
-describe('base', () => {
-  test('connect', async () => {
-    const handler = jest.fn();
+describe('@lawcket/websocket', () => {
 
-    const event = buildEvent('CONNECT');
-    const socket = new LambdaWebSocket();
-    socket.on('connect', handler);
-    await socket.createHandler()(event);
-    expect(handler).toHaveBeenCalled();
+  describe('base', () => {
+    test('connect', async () => {
+      const handler = jest.fn();
+      const response = await lawcket(handler)(buildEvent('CONNECT'));
+      expect(handler).toHaveBeenCalled();
+      expect(handler.mock.calls[0][1]).toHaveProperty('event', 'connect');
+      expect(response).toEqual({
+        statusCode: '200',
+      });
+    });
+
+    test('close', async () => {
+      const handler = jest.fn();
+      const response = await lawcket(handler)(buildEvent('DISCONNECT'));
+      expect(handler).toHaveBeenCalled();
+      expect(handler.mock.calls[0][1]).toHaveProperty('event', 'close');
+      expect(handler.mock.calls[0][2]).not.toBeDefined();
+      expect(response).toEqual({
+        statusCode: '200',
+      });
+    });
+
+    test('message', async () => {
+      const handler = jest.fn();
+      const response = await lawcket(handler)(buildEvent('MESSAGE'));
+      expect(handler).toHaveBeenCalled();
+      expect(handler.mock.calls[0][1]).toHaveProperty('event', 'message');
+      expect(handler.mock.calls[0][2]).toBeDefined();
+      expect(response).toEqual({
+        statusCode: '200',
+      });
+    });
   });
 
-  test('close', async () => {
+  test('plugins are broadcasted to', async () => {
+    const fakePlugin = jest.fn();
+    const plugins = [fakePlugin];
     const handler = jest.fn();
-
-    const event = buildEvent('DISCONNECT');
-    const socket = new LambdaWebSocket();
-    socket.on('close', handler);
-    await socket.createHandler()(event);
-    expect(handler).toHaveBeenCalled();
+    const response = await lawcket(handler, { plugins })(buildEvent('MESSAGE'));
+    expect(fakePlugin.mock.calls[0]).toEqual(handler.mock.calls[0]);
+    expect(response).toEqual({
+      statusCode: '200',
+    });
   });
 
-  test('message', async () => {
+  test('middleware is called', async () => {
+    const middle = jest.fn((event) => ({
+      ...event,
+      injected: true,
+    }))
+    const middleware = [ middle ];
+
     const handler = jest.fn();
+    const response = await lawcket(handler, { middleware })(buildEvent('MESSAGE'));
 
-    const event = buildEvent('MESSAGE');
-    const socket = new LambdaWebSocket();
-    socket.on('message', handler);
-    await socket.createHandler()(event);
+    expect(middle).toHaveBeenCalled();
     expect(handler).toHaveBeenCalled();
+    expect(handler.mock.calls[0][0]).toHaveProperty('injected', true);
+    expect(response).toEqual({
+      statusCode: '200',
+    });
   });
-});
 
-describe('plugins', () => {
-  class Plugin {
-    constructor() {
-      this.close = jest.fn();
-      this.message = jest.fn();
-      this.connect = jest.fn();
+  test('middleware fails, entire function fails', async () => {
+    expect.assertions(3);
+    const middle = jest.fn((event) => {
+      throw new Error('no');
+    })
+    const middleware = [ middle ];
+
+    const handler = jest.fn();
+    try {
+      await lawcket(handler, { middleware })(buildEvent('MESSAGE'));
+    } catch (e) {
+      expect(middle).toHaveBeenCalled();
+      expect(handler).not.toHaveBeenCalled();
+      expect(e.message).toEqual('no');
     }
-  }
-
-  test('connect', async () => {
-    const plugin = new Plugin();
-    const event = buildEvent('CONNECT');
-    const socket = new LambdaWebSocket({
-      plugins: [plugin],
-    });
-
-    await socket.createHandler()(event);
-    expect(plugin.connect).toHaveBeenCalled();
   });
 
-  test('close', async () => {
-    const plugin = new Plugin();
-    const event = buildEvent('DISCONNECT');
-    const socket = new LambdaWebSocket({
-      plugins: [plugin],
-    });
-
-    await socket.createHandler()(event);
-    expect(plugin.close).toHaveBeenCalled();
-  });
-
-  test('message', async () => {
-    const plugin = new Plugin();
-    const event = buildEvent('MESSAGE');
-    const socket = new LambdaWebSocket({
-      plugins: [plugin],
-    });
-
-    await socket.createHandler()(event);
-    expect(plugin.message).toHaveBeenCalled();
-  });
-});
-
-
-describe('middleware', () => {
-  test('connect', async () => {
-    const middleware = jest.fn((e) => e);
-    const event = buildEvent('CONNECT');
-    const socket = new LambdaWebSocket({
-      middleware: [middleware],
-    });
-
-    await socket.createHandler()(event);
-    expect(middleware).toHaveBeenCalledWith(event);
-  });
-
-  test('close', async () => {
-    const middleware = jest.fn((e) => e);
-    const event = buildEvent('DISCONNECT');
-    const socket = new LambdaWebSocket({
-      middleware: [middleware],
-    });
-
-    await socket.createHandler()(event);
-    expect(middleware).toHaveBeenCalledWith(event);
-  });
-
-  test('message', async () => {
-    const middleware = jest.fn((e) => e);
-    const event = buildEvent('MESSAGE');
-    const socket = new LambdaWebSocket({
-      middleware: [middleware],
-    });
-
-    await socket.createHandler()(event);
-    expect(middleware).toHaveBeenCalledWith(event);
-  });
 });

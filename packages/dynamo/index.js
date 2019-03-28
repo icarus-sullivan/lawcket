@@ -3,46 +3,31 @@ const AWS = require('aws-sdk');
 
 const doc = new AWS.DynamoDB.DocumentClient();
 
-const DEFAULT_OPTIONS = {
-  tableName: '',
-  additionalSyncFields: {},
-};
+module.exports = ({ tableName, additionalSyncFields } = {}) => async (evt, connection) => {
+  if (!tableName) {
+    throw new Error('Must provide a tableName to sync clients with');
+  }
 
-class DynamoPlugin {
-  constructor(opts) {
-    const options = { ...DEFAULT_OPTIONS, ...opts };
-    if (!options || !options.tableName) {
-      throw new Error('Must provide a tableName to sync clients with');
+  const { stage, domainName, connectionId, event } = connection;
+  switch(event) {
+    case 'connect': {
+      doc.put({
+        TableName: tableName,
+        Item: {
+          ...additionalSyncFields,
+          connectionId,
+          domainName,
+          stage,
+        },
+      }).promise();
+      break;
     }
-
-    this.options = options;
-    this.connect = this.connect.bind(this);
-    this.close = this.close.bind(this);
+    case 'close': {
+      await doc.delete({
+        TableName: tableName,
+        Key: { connectionId },
+      }).promise();
+      break;
+    }
   }
-
-  async connect({ requestContext }) {
-    const { tableName, additionalSyncFields } = this.options;
-    const { connectionId, domainName, stage } = requestContext;
-    return doc.put({
-      TableName: tableName,
-      Item: {
-        ...additionalSyncFields,
-        connectionId,
-        domainName,
-        stage,
-      },
-    }).promise();
-  }
-
-  async close({ requestContext }) {
-    const { tableName } = this.options;
-    const { connectionId } = requestContext;
-    return doc.delete({
-      TableName: tableName,
-      Key: { connectionId },
-    }).promise();
-  }
-}
-
-
-module.exports = DynamoPlugin;
+};

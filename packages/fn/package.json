@@ -1,0 +1,28 @@
+{
+  "name": "@lawcket/fn",
+  "version": "0.1.0",
+  "description": "A collection of utils for use in lawcket libs",
+  "main": "lib/index.js",
+  "files": [
+    "lib/*"
+  ],
+  "scripts": {
+    "prepublish": "yarn build",
+    "build": "tsc -p .",
+    "test": "echo 'not implemented yet'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/icarus-sullivan/lawcket-fn.git"
+  },
+  "author": "Chris Sullivan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/icarus-sullivan/lawcket-fn/issues"
+  },
+  "homepage": "https://github.com/icarus-sullivan/lawcket-fn#readme",
+  "devDependencies": {
+    "@types/node": "^11.11.3",
+    "typescript": "^3.3.3333"
+  }
+}

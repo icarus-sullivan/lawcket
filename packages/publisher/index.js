@@ -1,15 +1,28 @@
 // eslint-disable-next-line import/no-unresolved
 const aws4 = require('aws4');
 const https = require('https');
-const http = require('http');
 
-const DEFAULT_OPTIONS = {
-  secure: true,
-};
+const createHeaders = (data) => 
+  data && data instanceof Buffer 
+    ? { 'Content-Type': 'application/octet-stream' }
+    : { 'Content-Type': 'application/json' };
 
-const request = ({ method, options }) => new Promise((resolve) => {
-  const { body } = options;
-  const req = method.request(options, ({ statusCode }) => {
+const createBody = (data) => 
+  data && data instanceof Buffer
+    ? data
+    : JSON.stringify(data);
+
+const sign = ({ data, stage, domainName, connectionId }) => aws4.sign({
+  path: `/${stage}/%40connections/${encodeURIComponent(connectionId)}`,
+  headers: createHeaders(data),
+  body: createBody(data),
+  host: domainName,
+  method: 'POST',
+});
+
+const createPublisher = ({ stage, domainName, connectionId }) => (data) => new Promise((resolve) => {
+  const options = sign({ data, stage, domainName, connectionId });
+  const req = https.request(options, ({ statusCode }) => {
     resolve(statusCode === 200);
   });
   req.on('error', () => resolve(false));
@@ -17,26 +30,7 @@ const request = ({ method, options }) => new Promise((resolve) => {
   req.end();
 });
 
-const createRequest = (data, { stage, domainName, connectionId }) => aws4.sign({
-  path: `/${stage}/%40connections/${encodeURIComponent(connectionId)}`,
-  host: domainName,
-  method: 'POST',
-  headers: data && data instanceof Buffer
-    ? { 'Content-Type': 'application/octet-stream' }
-    : { 'Content-Type': 'application/json' },
-  body: data && data instanceof Buffer
-    ? data
-    : JSON.stringify(data),
-});
-
-const createPublisher = ({ requestContext }, opts = DEFAULT_OPTIONS) => (data) => request({
-  options: createRequest(data, requestContext),
-  method: opts.secure ? https : http,
-});
-
-module.exports = (event) => (event.requestContext.eventType === 'MESSAGE'
-  ? ({
-    ...event,
-    send: createPublisher(event, { secure: true }),
-  })
-  : event);
+module.exports = ({ requestContext }) => 
+  requestContext.eventType === 'MESSAGE'
+    ? createPublisher(requestContext)
+    : undefined;

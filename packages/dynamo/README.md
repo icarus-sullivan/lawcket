@@ -17,35 +17,67 @@ yarn add @lawcket/websocket @lawcket/dynamo
 
 Lambda websocket connections can sometimes be flakey. This can happen for a number of reasons, however there is a simple way to remediate any connection issues pertaining to these connection disruptions. Using a dynamo passthrough to sync connections can allow server-side code to store and mass-publish data to clients. 
 
-```javascript
-const DynamoPlugin = require('@lawcket/dynamo');
-const LambdaWebSocket = require('@lawcket/websocket');
+#### Asynchronous
 
-const dynamoPlugin = new DynamoPlugin({
+```javascript
+const dynamoPlugin = require('@lawcket/dynamo');
+const lambdaWebsocket = require('@lawcket/websocket');
+
+const configuredPlugin = dynamoPlugin({
   tableName: process.env.CONNECTIONS_TABLE,
   additionalSyncFields: {
     channel: '#general',
   },
 });
 
-const lambdaSocket = new LambdaWebSocket({
-  plugins: [dynamoPlugin],
-});
+const internalHandler = async (event, connection, publish) => {
+  console.log(`Connection: ${JSON.stringify(connection, null, 2)}`);
+  // publish is only available during a message event
+  if (connection.event === 'message' && publish) {
+    await publish({ message: 'hello from server' });
+  }
+};
 
-lambdaSocket.on('connect', async (event) => {
-  // client is synced to dynamo
-});
-
-lambdaSocket.on('message', async (event) => {
-  // no dynamo operations are done to avoid unwanted dynamo requests
-});
-
-lambdaSocket.on('close', async (event) => {
-  // client has gone away, connection is removed the dynamo
+const socket = lambdaWebsocket(handler, { 
+  plugins: [configuredPlugin],
+  middleware: []
 });
 
 module.exports = {
-  default: lambdaSocket.createHandler(),
+  default: socket,
+};
+```
+
+#### Synchronous
+
+```javascript
+const dynamoPlugin = require('@lawcket/dynamo');
+const lambdaWebsocket = require('@lawcket/websocket');
+
+const configuredPlugin = dynamoPlugin({
+  tableName: process.env.CONNECTIONS_TABLE,
+  additionalSyncFields: {
+    channel: '#general',
+  },
+});
+
+const internalHandler = async (event, connection, publish) => {
+  await configuredPlugin(event, connection);
+  
+  console.log(`Connection: ${JSON.stringify(connection, null, 2)}`);
+  // publish is only available during a message event
+  if (connection.event === 'message' && publish) {
+    await publish({ message: 'hello from server' });
+  }
+};
+
+const socket = lambdaWebsocket(handler, { 
+  plugins: [],
+  middleware: []
+});
+
+module.exports = {
+  default: socket,
 };
 ```
 
