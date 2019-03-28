@@ -1,15 +1,12 @@
 const lambdaWebsocket = require('@lawcket/websocket');
 
 const authMiddleware = (event) => {
-  const token = event.headers.Authorization;
-  if (!token) {
-    throw new Error('Not authorized');
-  }
-
+  console.log('authorizing middleware');
   return event;
 }
 
 const dynamoSyncPlugin = (event, connection) => {
+  console.log('syncing dynamo', connection);
   if (connection.event === 'close') {
     // remove dynamo record
   }
@@ -18,7 +15,7 @@ const dynamoSyncPlugin = (event, connection) => {
   }
 }
 
-const internalHandler = async (event, connection, publish) => {
+const handler = async (event, connection, publish) => {
   console.log(`Connection: ${JSON.stringify(connection, null, 2)}`);
   // publish is only available during a message event
   if (connection.event === 'message' && publish) {
@@ -26,11 +23,9 @@ const internalHandler = async (event, connection, publish) => {
   }
 };
 
-const socket = lambdaWebsocket(handler, { 
-  plugins: [dynamoSyncPlugin],
-  middleware: []
-});
-
 module.exports = {
-  default: socket,
+  default: lambdaWebsocket(handler, { 
+    plugins: [dynamoSyncPlugin],
+    middleware: [authMiddleware]
+  }),
 };

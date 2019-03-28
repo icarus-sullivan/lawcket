@@ -1,6 +1,6 @@
 {
   "name": "@lawcket/publisher",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Middleware for @lawcket/websocket injects send method",
   "main": "index.js",
   "scripts": {

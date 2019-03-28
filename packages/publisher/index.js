@@ -26,11 +26,11 @@ const createPublisher = ({ stage, domainName, connectionId }) => (data) => new P
     resolve(statusCode === 200);
   });
   req.on('error', () => resolve(false));
-  req.write(body);
+  req.write(options.body);
   req.end();
 });
 
 module.exports = ({ requestContext }) => 
-  requestContext.eventType === 'MESSAGE'
+  requestContext && requestContext.eventType === 'MESSAGE'
     ? createPublisher(requestContext)
     : undefined;
