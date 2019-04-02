@@ -18,17 +18,17 @@ yarn add -D serverless-websockets-plugin
 ## Usage
 
 #### lambdaWebSocket(handler, options?)
-- `handler`: <AsyncFunction> | <Function>
-    - `event`: <LambdaEvent>
-    - `connection`: <Object> 
-        - `stage`: <String> 
-        - `domainName`: <String> 
-        - `connectionId`: <String>
-        - `event`: <String> 'close' | 'connect' | 'message'
-    - `publish`: <AsyncFunction> used to send messages to the client (only available within 'message' events)
-- `options`: <Object>
-    - `plugins`: <Functions[]>
-    - `middleware`: <Function[]>
+- `handler`: **async function** or **sync function**
+    - `event`: **lambda event**
+    - `connection`: **object**
+        - `stage`: **string**
+        - `domainName`: **string**
+        - `connectionId`: **string**
+        - `event`: **string** *close*, *connect*, *message*
+    - `publish`: **async function** used to send messages to the client (only available within 'message' events)
+- `options`: **object**
+    - `plugins`: **function array**
+    - `middleware`: **function array**
 
 #### Middleware
 Middleware are used to modify or interrupt the lambda event. An excellent use-case for this is authentication. Internally @lawcket/websocket uses a middleware to automatically parse incoming body data. 
