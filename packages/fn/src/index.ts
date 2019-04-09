@@ -4,4 +4,5 @@ module.exports = {
   ...require('./pipe'),
   ...require('./toss'),
   ...require('./broadcast'),
+  ...require('./get'),
 };

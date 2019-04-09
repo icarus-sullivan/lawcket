@@ -9,6 +9,4 @@ const pipe = (...fn: any[]) =>
       : n(a), 
     initial);
 
-module.exports = {
-  pipe,
-};
+module.exports = { pipe };
