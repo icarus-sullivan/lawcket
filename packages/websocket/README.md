@@ -3,84 +3,66 @@
 
 #### A pluggable API Gateway Lambda wrapper that mimics server websockets
 
+**NOTE:**
+Supports Serverless >=1.38 
+For pre-1.38 use [@lawcket/websockets@0.1.4](https://www.npmjs.com/package/@lawcket/websocket/v/0.1.4)
+
+#### lawcket(options?)
+- `options`: **object**
+    - `plugins`: **function array**
+    - `middleware`: **function array**
+    - `handler`: **async function** or **sync function**
+        - `event`: **lambda event**
+        - `connection`: **object**
+            - `stage`: **string**
+            - `domainName`: **string**
+            - `connectionId`: **string**
+            - `event`: **string** *close*, *connect*, *message*
+        - `publish`: **async function** used to send messages to the client (only available within 'message' events)
+
 ## Installation
 
 ```sh
 npm install @lawcket/websocket
-npm install -D serverless-websockets-plugin
 ```
 or
 ```sh
 yarn add @lawcket/websocket
-yarn add -D serverless-websockets-plugin
 ```
 
 ## Usage
 
-#### lambdaWebSocket(handler, options?)
-- `handler`: **async function** or **sync function**
-    - `event`: **lambda event**
-    - `connection`: **object**
-        - `stage`: **string**
-        - `domainName`: **string**
-        - `connectionId`: **string**
-        - `event`: **string** *close*, *connect*, *message*
-    - `publish`: **async function** used to send messages to the client (only available within 'message' events)
-- `options`: **object**
-    - `plugins`: **function array**
-    - `middleware`: **function array**
+##### Servereless Project
 
-#### Middleware
-Middleware are used to modify or interrupt the lambda event. An excellent use-case for this is authentication. Internally @lawcket/websocket uses a middleware to automatically parse incoming body data. 
+Configure your function to accept all routes/actions. 
 
-#### Plugins
-Plugins mimic the handler and are called asynchronously with the same parameters. A good use case for this is storing connection information, or for processing asynchronous connection-related tasks that do not pertain to the general flow of the lambda. 
-
-## Example
-
-In your serverless.yml file, configure the @lawcket/websocket lambda. 
+Example:
 
 ```
-plugins:
-  - serverless-websockets-plugin
-
 functions:
   websocket:
     handler: src/index.default
     memorySize: 3008
     events:
       - websocket:
-          routeKey: $connect
+          route: $connect
       - websocket:
-          routeKey: $disconnect
+          route: $disconnect
       - websocket:
-          routeKey: $default
+          route: $default
 ```
+
+##### Lambda
 
 Then create your handler, using the @lawcket/websocket library. 
 
-_src/index.js_
+Example:
 ```javascript
-const lambdaWebsocket = require('@lawcket/websocket');
+// pre-ES6
+// const lawcket = require('@lawcket/websocket');
 
-const authMiddleware = (event) => {
-  const token = event.headers.Authorization;
-  if (!token) {
-    throw new Error('Unauthorized');
-  }
-
-  // ...additional verification
-  return event;
-}
-
-const dynamoSyncPlugin = (event, connection) => {
-  if (connection.event === 'close') {
-    // remove dynamo record
-  }
-  if (connection.event === 'connect') {
-    // store connection to dynamo
-  }
-}
+// ES6
+import lawcket from '@lawcket/websocket';
 
 const handler = async (event, connection, publish) => {
   console.log(`Connection: ${JSON.stringify(connection, null, 2)}`);
@@ -90,19 +72,67 @@ const handler = async (event, connection, publish) => {
   }
 };
 
-const socket = lambdaWebsocket(handler, { 
-  plugins: [dynamoSyncPlugin],
-  middleware: [authMiddleware]
+export default lawcket({
+  middleware: [],
+  plugins: [],
+  handler,
 });
-
-module.exports = {
-  default: socket,
-};
 ```
 
-Note: connections can be disrupted. Additionally asynchronous commands might need to be broadcasted to multiple connections. It is suggested that a custom plugin be created to sync connections to DynamoDB or another storage solution. This can help with rebuilding connections or notifying clients that the connection has closed.
+##### Plugins
+Plugins mimic how the handler is called and is invoked asychronously. A good use case for this is storing connection information, or for processing connection-related tasks that do not pertain to the general flow of the lambda. 
 
-[Here](https://github.com/icarus-sullivan/lawcket/tree/master/serverless) is a full example of @lawcket/websocket usage. It includes body parsing, publishing, as well as dynamo syncing of clients. 
+Example:
+```
+import lawcket from '@lawcket/websocket';
+
+// ... handler here
+
+const dynamo = async  (originalEvent, connection) => {
+    if (connection.event === 'connect') {
+        // store connection to dynamo
+    }
+    if (connection.event === 'close') {
+        // remove connection from dynamo
+    }
+}
+
+export default lawcket({
+  middleware: [],
+  plugins: [dynamo],
+  handler,
+});
+```
+
+#### Middleware
+Middleware are used to modify or interrupt the lambda event. An excellent use-case for this is authentication. Internally @lawcket/websocket uses a middleware to automatically parse incoming body data. Be aware, middleware are processed in-order.
+
+Example:
+```
+import lawcket from '@lawcket/websocket';
+
+// ... handler here
+
+const auth = (originalEvent) => {
+    const { requestContext, headers } = originalEvent;
+    if (headers && headers.Authorization 
+        && requestContext.eventType === 'CONNECT') {
+        // check authorization here
+    }
+    
+    // middleware must return the event if not throwing
+    return originalEvent;
+}
+
+export default lawcket({
+  middleware: [auth],
+  plugins: [],
+  handler,
+});
+```
+
+
+Click [here](https://github.com/icarus-sullivan/lawcket/tree/master/serverless) for a full example of @lawcket/websocket usage.
 
 [link-download]: https://img.shields.io/npm/dt/@lawcket/websocket.svg
 [link-version]: https://img.shields.io/npm/v/@lawcket/websocket.svg

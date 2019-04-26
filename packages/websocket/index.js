@@ -1,14 +1,14 @@
 const { pipe, broadcast } = require('@lawcket/fn');
-const publisher = require('@lawcket/publisher');
+const { default: publisher } = require('@lawcket/publisher');
 const bodyParser = require('@lawcket/body-parser');
 
-const EVENT_MAPPING = {
+const EVENT_MAPPING = Object.freeze({
   CONNECT: 'connect',
   DISCONNECT: 'close',
   MESSAGE: 'message',
-};
+});
 
-module.exports = (handler, { middleware = [], plugins = [] } = {}) => async (event) => {
+module.exports = ({ middleware = [], plugins = [], handler } = {}) => async (event) => {
   try {
     const evt = await pipe(bodyParser, ...middleware)(event);
     const publish = await publisher(evt);

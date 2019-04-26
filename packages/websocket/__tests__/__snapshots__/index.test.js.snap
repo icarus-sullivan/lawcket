@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`@lawcket/websocket base close 1`] = `
+Object {
+  "connectionId": "fake-id",
+  "domainName": "fakeDomain.execute-api.us-west-2.amazonaws.com",
+  "event": "close",
+  "stage": "dev",
+}
+`;
+
+exports[`@lawcket/websocket base connect 1`] = `
+Object {
+  "connectionId": "fake-id",
+  "domainName": "fakeDomain.execute-api.us-west-2.amazonaws.com",
+  "event": "connect",
+  "stage": "dev",
+}
+`;
+
+exports[`@lawcket/websocket base message 1`] = `
+Object {
+  "connectionId": "fake-id",
+  "domainName": "fakeDomain.execute-api.us-west-2.amazonaws.com",
+  "event": "message",
+  "stage": "dev",
+}
+`;

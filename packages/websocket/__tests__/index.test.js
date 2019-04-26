@@ -1,23 +1,25 @@
 const lawcket = require('../');
 
-const buildEvent = (event) => ({
-  requestContext: {
-    eventType: event,
-    stage: 'dev',
-    domainName: 'fakeDomain.execute-api.us-west-2.amazonaws.com',
-    connectionId: 'fake-id',
-  },
-  body: '',
-});
+const framework = ({ middleware, plugins, handler, event }) => 
+  lawcket({ middleware, plugins, handler })({
+    requestContext: {
+      eventType: event,
+      stage: 'dev',
+      domainName: 'fakeDomain.execute-api.us-west-2.amazonaws.com',
+      connectionId: 'fake-id',
+    },
+    body: '',
+  });
 
 describe('@lawcket/websocket', () => {
-
   describe('base', () => {
     test('connect', async () => {
       const handler = jest.fn();
-      const response = await lawcket(handler)(buildEvent('CONNECT'));
+      const response = await framework({ handler, event: 'CONNECT' });
       expect(handler).toHaveBeenCalled();
-      expect(handler.mock.calls[0][1]).toHaveProperty('event', 'connect');
+      expect(handler.mock.calls[0][1]).toMatchSnapshot();
+      // publish method not present
+      expect(handler.mock.calls[0][2]).toBeUndefined();
       expect(response).toEqual({
         statusCode: '200',
       });
@@ -25,10 +27,11 @@ describe('@lawcket/websocket', () => {
 
     test('close', async () => {
       const handler = jest.fn();
-      const response = await lawcket(handler)(buildEvent('DISCONNECT'));
+      const response = await framework({ handler, event: 'DISCONNECT' });
       expect(handler).toHaveBeenCalled();
-      expect(handler.mock.calls[0][1]).toHaveProperty('event', 'close');
-      expect(handler.mock.calls[0][2]).not.toBeDefined();
+      expect(handler.mock.calls[0][1]).toMatchSnapshot();
+      // publish method not present
+      expect(handler.mock.calls[0][2]).toBeUndefined();
       expect(response).toEqual({
         statusCode: '200',
       });
@@ -36,9 +39,9 @@ describe('@lawcket/websocket', () => {
 
     test('message', async () => {
       const handler = jest.fn();
-      const response = await lawcket(handler)(buildEvent('MESSAGE'));
+      const response = await framework({ handler, event: 'MESSAGE' });
       expect(handler).toHaveBeenCalled();
-      expect(handler.mock.calls[0][1]).toHaveProperty('event', 'message');
+      expect(handler.mock.calls[0][1]).toMatchSnapshot();
       expect(handler.mock.calls[0][2]).toBeDefined();
       expect(response).toEqual({
         statusCode: '200',
@@ -47,47 +50,51 @@ describe('@lawcket/websocket', () => {
   });
 
   test('plugins are broadcasted to', async () => {
-    const fakePlugin = jest.fn();
-    const plugins = [fakePlugin];
-    const handler = jest.fn();
-    const response = await lawcket(handler, { plugins })(buildEvent('MESSAGE'));
-    expect(fakePlugin.mock.calls[0]).toEqual(handler.mock.calls[0]);
-    expect(response).toEqual({
-      statusCode: '200',
-    });
+    const args = {
+      handler: jest.fn(),
+      plugins: [jest.fn()],
+      event: 'MESSAGE',
+    };
+    await framework(args);
+    // plugins get the same event as the handler
+    expect(args.handler.mock.calls[0]).toEqual(args.plugins[0].mock.calls[0]);
   });
 
   test('middleware is called', async () => {
-    const middle = jest.fn((event) => ({
-      ...event,
-      injected: true,
-    }))
-    const middleware = [ middle ];
+    const args = {
+      handler: jest.fn(),
+      middleware: [
+        jest.fn((ev) => ({
+          ...ev,
+          injected: true,
+        }))
+      ],
+      event: 'MESSAGE',
+    };
+    await framework(args);
 
-    const handler = jest.fn();
-    const response = await lawcket(handler, { middleware })(buildEvent('MESSAGE'));
-
-    expect(middle).toHaveBeenCalled();
-    expect(handler).toHaveBeenCalled();
-    expect(handler.mock.calls[0][0]).toHaveProperty('injected', true);
-    expect(response).toEqual({
-      statusCode: '200',
-    });
+    expect(args.middleware[0]).toHaveBeenCalled();
+    expect(args.handler).toHaveBeenCalled();
+    expect(args.handler.mock.calls[0][0]).toHaveProperty('injected', true);
   });
 
   test('middleware fails, entire function fails', async () => {
     expect.assertions(3);
-    const middle = jest.fn((event) => {
-      throw new Error('no');
-    })
-    const middleware = [ middle ];
+    const args = {
+      handler: jest.fn(),
+      middleware: [
+        jest.fn(() => {
+          throw new Error('no');
+        })
+      ],
+      event: 'MESSAGE',
+    };
 
-    const handler = jest.fn();
     try {
-      await lawcket(handler, { middleware })(buildEvent('MESSAGE'));
+      await framework(args);
     } catch (e) {
-      expect(middle).toHaveBeenCalled();
-      expect(handler).not.toHaveBeenCalled();
+      expect(args.middleware[0]).toHaveBeenCalled();
+      expect(args.handler).not.toHaveBeenCalled();
       expect(e.message).toEqual('no');
     }
   });

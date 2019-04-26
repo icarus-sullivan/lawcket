@@ -2,15 +2,19 @@
 service: lawcket
 
 plugins:
-  - serverless-websockets-plugin
+  - serverless-webpack
 
 custom:
   syncTable: Connections-${self:provider.stage}
   billingMode: PAY_PER_REQUEST
 
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+
 provider:
   name: aws
-  stage: ${opt:stage, 'dev'}
+  stage: dev
   region: us-west-2
   runtime: nodejs8.10
   iamRoleStatements:
@@ -40,11 +44,11 @@ functions:
       CONNECTIONS_TABLE: ${self:custom.syncTable}
     events:
       - websocket:
-          routeKey: $connect
+          route: $connect
       - websocket:
-          routeKey: $disconnect
+          route: $disconnect
       - websocket:
-          routeKey: $default
+          route: $default
 
 resources:
   Resources:

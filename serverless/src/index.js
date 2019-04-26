@@ -1,4 +1,4 @@
-const lambdaWebsocket = require('@lawcket/websocket');
+import lawcket from '@lawcket/websocket';
 
 const authMiddleware = (event) => {
   console.log('authorizing middleware');
@@ -23,9 +23,8 @@ const handler = async (event, connection, publish) => {
   }
 };
 
-module.exports = {
-  default: lambdaWebsocket(handler, { 
-    plugins: [dynamoSyncPlugin],
-    middleware: [authMiddleware]
-  }),
-};
+export default lawcket({ 
+  plugins: [dynamoSyncPlugin],
+  middleware: [authMiddleware],
+  handler,
+});
