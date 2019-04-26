@@ -7,19 +7,6 @@
 Supports Serverless >=1.38 
 For pre-1.38 use [@lawcket/websockets@0.1.4](https://www.npmjs.com/package/@lawcket/websocket/v/0.1.4)
 
-#### lawcket(options?)
-- `options`: **object**
-    - `plugins`: **function array**
-    - `middleware`: **function array**
-    - `handler`: **async function** or **sync function**
-        - `event`: **lambda event**
-        - `connection`: **object**
-            - `stage`: **string**
-            - `domainName`: **string**
-            - `connectionId`: **string**
-            - `event`: **string** *close*, *connect*, *message*
-        - `publish`: **async function** used to send messages to the client (only available within 'message' events)
-
 ## Installation
 
 ```sh
@@ -53,8 +40,7 @@ functions:
 ```
 
 ##### Lambda
-
-Then create your handler, using the @lawcket/websocket library. 
+The lambda will need to be constructed by the @lawcket/websocket library. It modifies incoming messages and handles the federation of middleware and plugins. 
 
 Example:
 ```javascript
@@ -78,6 +64,26 @@ export default lawcket({
   handler,
 });
 ```
+
+The lambda implementation will be called with three params; event, connection, and publish. 
+
+_event_:
+- the original lambda event
+- contains header information during a `CONNECT` request
+
+_connection_: 
+ - a subset of collection info, useful for storing
+ - object structure
+     - event: 'close' | 'connect' | 'message'
+     - connectionId: string
+     - stage: string,
+     - domainName: string
+ 
+_publish_:
+- only available during a `message` event
+- needs to be called asynchronously 
+- supports base64, or stringifiable data
+
 
 ##### Plugins
 Plugins mimic how the handler is called and is invoked asychronously. A good use case for this is storing connection information, or for processing connection-related tasks that do not pertain to the general flow of the lambda. 
