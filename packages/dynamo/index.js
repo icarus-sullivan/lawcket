@@ -11,7 +11,7 @@ module.exports = ({ tableName, additionalSyncFields } = {}) => async (evt, conne
   const { stage, domainName, connectionId, event } = connection;
   switch(event) {
     case 'connect': {
-      doc.put({
+      return doc.put({
         TableName: tableName,
         Item: {
           ...additionalSyncFields,
@@ -20,14 +20,12 @@ module.exports = ({ tableName, additionalSyncFields } = {}) => async (evt, conne
           stage,
         },
       }).promise();
-      break;
     }
     case 'close': {
-      await doc.delete({
+      return doc.delete({
         TableName: tableName,
         Key: { connectionId },
       }).promise();
-      break;
     }
   }
 };
