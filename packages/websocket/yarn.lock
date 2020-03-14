@@ -131,23 +131,24 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@lawcket/body-parser@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@lawcket/body-parser/-/body-parser-0.0.4.tgz#961731afd1ee532f098d48bd319d323639811389"
-  integrity sha512-nmAgv1pk9DS9p/BJuctxdAlNe6BVUsw9fX28HI1+F735jtrelxyOrvJuhrbTnR4cBpQSjEGx7LRLkVtrOiSFGA==
+"@lawcket/body-parser@^0.1.0":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@lawcket/body-parser/-/body-parser-0.1.1.tgz#d557a4379c364817597949996093d83cb4f7d334"
+  integrity sha512-YCcgmwAZG9hyPrsKL/MqA7N2wJ6fGH080GJpHBXHo1ip3orCJpPv73WTHbPFXkXc5JXs9CfZnqvZgehgtuHF9A==
   dependencies:
     aws-sdk "^2.395.0"
 
-"@lawcket/fn@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@lawcket/fn/-/fn-0.0.4.tgz#03a039f2c75ac8e9c8b4c1f8dc058cb85b5aa642"
-  integrity sha512-xJeC2ZUlCMVtkdRO+eikAEFjuLq1TDp5lyN6P1WyjdEzLfALnk2jns9tNzLItp/6ySFZPg8LTWGo0agBvwhyVQ==
+"@lawcket/fn@^0.1.0", "@lawcket/fn@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@lawcket/fn/-/fn-0.1.1.tgz#065eeb569bae227ce9bf234f0872f2e639d02ef5"
+  integrity sha512-W2tjDZVLY2EVJWTRktOfB/PbGVkyILMa2JK/yd8else5F/6tE99hPp7t/b1ca0IvGKyaAA4d+/CQqytr/cHodg==
 
-"@lawcket/publisher@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@lawcket/publisher/-/publisher-0.0.4.tgz#0698b8f5cf3b53f4863c8d3277736dc9fc83e3af"
-  integrity sha512-pp5tFKpXCVX1IK7Nprfln6FP1b0Rswo2CO+hQcTn+iHGwJF2bcPW4/22kiFKpGZU0fVj5eRcEM1V6FlCbsqnRw==
+"@lawcket/publisher@0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@lawcket/publisher/-/publisher-0.1.4.tgz#22f204f68806a22563960e4a372fe5fa225abaa7"
+  integrity sha512-wPa95MHafkuaMIZmsptG//2RxNVbTXUvmy6CT9cOvg5olWbxUJ/CICFNdy5fzsLIRinr2b9F8Adpvlsc3e62ew==
   dependencies:
+    "@lawcket/fn" "^0.1.1"
     aws4 "^1.8.0"
 
 abab@^2.0.0:
@@ -174,9 +175,9 @@ acorn-walk@^6.0.1:
   integrity sha512-OtUw6JUTgxA2QoqqmrmQ7F2NYqiBPi/L2jqHyFtllhOUvXYQXf0Z1CYUinIfyT4bTCGmrA7gX9FvHA81uzCoVw==
 
 acorn@^5.5.3:
-  version "5.7.3"
-  resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.7.3.tgz#67aa231bf8812974b85235a96771eb6bd07ea279"
-  integrity sha512-T/zvzYRfbVojPWahDsE5evJdHb3oJoQfFbsrKM7w5Zcs++Tr257tia3BmMP8XYVjp1S9RZXQMh7gao96BlqZOw==
+  version "5.7.4"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.7.4.tgz#3e8d8a9947d0599a1796d10225d7432f4a4acf5e"
+  integrity sha512-1D++VG7BhrtvQpNbBzovKNc1FLGGEE/oGe7b9xJm/RFHMBeUaUGpluV9RLjZa47YFdPcDAenEYuq9pQPcMdLJg==
 
 acorn@^6.0.1:
   version "6.0.6"
