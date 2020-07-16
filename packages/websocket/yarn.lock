@@ -131,23 +131,24 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@lawcket/body-parser@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@lawcket/body-parser/-/body-parser-0.0.4.tgz#961731afd1ee532f098d48bd319d323639811389"
-  integrity sha512-nmAgv1pk9DS9p/BJuctxdAlNe6BVUsw9fX28HI1+F735jtrelxyOrvJuhrbTnR4cBpQSjEGx7LRLkVtrOiSFGA==
+"@lawcket/body-parser@^0.1.0":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@lawcket/body-parser/-/body-parser-0.1.1.tgz#d557a4379c364817597949996093d83cb4f7d334"
+  integrity sha512-YCcgmwAZG9hyPrsKL/MqA7N2wJ6fGH080GJpHBXHo1ip3orCJpPv73WTHbPFXkXc5JXs9CfZnqvZgehgtuHF9A==
   dependencies:
     aws-sdk "^2.395.0"
 
-"@lawcket/fn@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@lawcket/fn/-/fn-0.0.4.tgz#03a039f2c75ac8e9c8b4c1f8dc058cb85b5aa642"
-  integrity sha512-xJeC2ZUlCMVtkdRO+eikAEFjuLq1TDp5lyN6P1WyjdEzLfALnk2jns9tNzLItp/6ySFZPg8LTWGo0agBvwhyVQ==
+"@lawcket/fn@^0.1.0", "@lawcket/fn@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@lawcket/fn/-/fn-0.1.1.tgz#065eeb569bae227ce9bf234f0872f2e639d02ef5"
+  integrity sha512-W2tjDZVLY2EVJWTRktOfB/PbGVkyILMa2JK/yd8else5F/6tE99hPp7t/b1ca0IvGKyaAA4d+/CQqytr/cHodg==
 
-"@lawcket/publisher@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@lawcket/publisher/-/publisher-0.0.4.tgz#0698b8f5cf3b53f4863c8d3277736dc9fc83e3af"
-  integrity sha512-pp5tFKpXCVX1IK7Nprfln6FP1b0Rswo2CO+hQcTn+iHGwJF2bcPW4/22kiFKpGZU0fVj5eRcEM1V6FlCbsqnRw==
+"@lawcket/publisher@0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@lawcket/publisher/-/publisher-0.1.4.tgz#22f204f68806a22563960e4a372fe5fa225abaa7"
+  integrity sha512-wPa95MHafkuaMIZmsptG//2RxNVbTXUvmy6CT9cOvg5olWbxUJ/CICFNdy5fzsLIRinr2b9F8Adpvlsc3e62ew==
   dependencies:
+    "@lawcket/fn" "^0.1.1"
     aws4 "^1.8.0"
 
 abab@^2.0.0:
@@ -2053,9 +2054,9 @@ lodash.sortby@^4.7.0:
   integrity sha1-7dFMgk4sycHgsKG0K7UhBRakJDg=
 
 lodash@^4.13.1, lodash@^4.17.10:
-  version "4.17.11"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
-  integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
+  version "4.17.19"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
+  integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
 
 loose-envify@^1.0.0:
   version "1.4.0"
