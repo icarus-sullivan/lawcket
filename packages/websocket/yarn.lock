@@ -131,23 +131,24 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@lawcket/body-parser@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@lawcket/body-parser/-/body-parser-0.0.4.tgz#961731afd1ee532f098d48bd319d323639811389"
-  integrity sha512-nmAgv1pk9DS9p/BJuctxdAlNe6BVUsw9fX28HI1+F735jtrelxyOrvJuhrbTnR4cBpQSjEGx7LRLkVtrOiSFGA==
+"@lawcket/body-parser@^0.1.0":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@lawcket/body-parser/-/body-parser-0.1.1.tgz#d557a4379c364817597949996093d83cb4f7d334"
+  integrity sha512-YCcgmwAZG9hyPrsKL/MqA7N2wJ6fGH080GJpHBXHo1ip3orCJpPv73WTHbPFXkXc5JXs9CfZnqvZgehgtuHF9A==
   dependencies:
     aws-sdk "^2.395.0"
 
-"@lawcket/fn@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@lawcket/fn/-/fn-0.0.4.tgz#03a039f2c75ac8e9c8b4c1f8dc058cb85b5aa642"
-  integrity sha512-xJeC2ZUlCMVtkdRO+eikAEFjuLq1TDp5lyN6P1WyjdEzLfALnk2jns9tNzLItp/6ySFZPg8LTWGo0agBvwhyVQ==
+"@lawcket/fn@^0.1.0", "@lawcket/fn@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@lawcket/fn/-/fn-0.1.1.tgz#065eeb569bae227ce9bf234f0872f2e639d02ef5"
+  integrity sha512-W2tjDZVLY2EVJWTRktOfB/PbGVkyILMa2JK/yd8else5F/6tE99hPp7t/b1ca0IvGKyaAA4d+/CQqytr/cHodg==
 
-"@lawcket/publisher@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@lawcket/publisher/-/publisher-0.0.4.tgz#0698b8f5cf3b53f4863c8d3277736dc9fc83e3af"
-  integrity sha512-pp5tFKpXCVX1IK7Nprfln6FP1b0Rswo2CO+hQcTn+iHGwJF2bcPW4/22kiFKpGZU0fVj5eRcEM1V6FlCbsqnRw==
+"@lawcket/publisher@0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@lawcket/publisher/-/publisher-0.1.4.tgz#22f204f68806a22563960e4a372fe5fa225abaa7"
+  integrity sha512-wPa95MHafkuaMIZmsptG//2RxNVbTXUvmy6CT9cOvg5olWbxUJ/CICFNdy5fzsLIRinr2b9F8Adpvlsc3e62ew==
   dependencies:
+    "@lawcket/fn" "^0.1.1"
     aws4 "^1.8.0"
 
 abab@^2.0.0:
@@ -1261,9 +1262,9 @@ inherits@2, inherits@~2.0.3:
   integrity sha1-Yzwsg+PaQqUC9SRmAiSA9CCCYd4=
 
 ini@~1.3.0:
-  version "1.3.5"
-  resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.5.tgz#eee25f56db1c9ec6085e0c22778083f596abf927"
-  integrity sha512-RZY5huIKCMRWDUqZlEi72f/lmXKMvuszcMBduliQ3nnWbx9X/ZBQO7DijMEYS9EhHBb2qacRUMtC7svLwe0lcw==
+  version "1.3.7"
+  resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.7.tgz#a09363e1911972ea16d7a8851005d84cf09a9a84"
+  integrity sha512-iKpRpXP+CrP2jyrxvg1kMUpXDyRUFDWurxbnVT1vQPx+Wz9uCYsMIqYuSBLV+PAaZG/d7kRLKRFc9oDMsH+mFQ==
 
 invariant@^2.2.4:
   version "2.2.4"
